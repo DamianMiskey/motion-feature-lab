@@ -23,12 +23,13 @@ export default function ThreeBasicsPage() {
       <Demo title="Drag to orbit, scroll to zoom">
         <Scene />
         <p className="text-sm text-muted">
-          With motion reduced or the scene off screen, it stops spinning and only redraws when you move the camera (
-          <code>frameloop=&quot;demand&quot;</code>). Turn on <strong>Show FPS</strong> in the sidebar to see the difference.
+          With motion reduced or the scene off screen, it stops spinning and only redraws when you move the camera
+          (<code>frameloop=&quot;demand&quot;</code>, set by the shared <code>ThreeCanvas</code>). Turn on <strong>Show FPS</strong> in the sidebar to see the difference.
         </p>
       </Demo>
 
       <CodePeek file="app/three-basics/Scene.tsx" />
+      <CodePeek file="components/three/ThreeCanvas.tsx" />
     </FeaturePage>
   );
 }
