@@ -225,3 +225,14 @@ h3 { font-size: 0.95rem; margin: 1.25rem 0 0.5rem; }
 .flip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.6rem; min-height: 200px; }
 .flip-tile { aspect-ratio: 1; border: 0; border-radius: 10px; color: #fff; font: 700 1.4rem system-ui; cursor: pointer; }
 .flip-tile.expanded { grid-column: span 2; grid-row: span 2; }
+
+/* Rive demos */
+.binding-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+.binding-grid fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem; display: grid; gap: 0.5rem; align-content: start; }
+.binding-grid legend { font-weight: 650; padding: 0 0.3rem; }
+.binding-grid label { display: grid; gap: 0.2rem; }
+.binding-grid input:not([type="range"]):not([type="checkbox"]), .binding-grid select { font: inherit; }
+.slider-row { display: flex !important; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.slider-row input[type="range"] { flex: 1 1 140px; }
+.swatch { display: inline-block; width: 1em; height: 1em; border-radius: 4px; border: 1px solid var(--border); vertical-align: middle; }
+.binding-grid label.check { display: flex; align-items: center; gap: 0.4rem; }

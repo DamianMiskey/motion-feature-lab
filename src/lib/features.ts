@@ -28,9 +28,9 @@ export const features: Feature[] = [
 
   { slug: "rive-basics", name: "Rive playback", category: "Rive", phase: 1, ready: true,
     summary: "Play .riv files, control playback, react to the pointer." },
-  { slug: "rive-data-binding", name: "Data binding", category: "Rive", phase: 3, ready: false,
+  { slug: "rive-data-binding", name: "Data binding", category: "Rive", phase: 3, ready: true,
     summary: "Drive a Rive file from your app's data, and read values back." },
-  { slug: "rive-layouts", name: "Layouts & responsive", category: "Rive", phase: 3, ready: false,
+  { slug: "rive-layouts", name: "Layouts & responsive", category: "Rive", phase: 3, ready: true,
     summary: "Fit, alignment and artboards that resize with the page." },
 
   { slug: "three-basics", name: "A first 3D scene", category: "Three.js", phase: 1, ready: true,
