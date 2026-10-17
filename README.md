@@ -2,7 +2,7 @@
 
 A hands-on tour of **GSAP**, **Rive** and **Three.js**. Each page demos one technique live, explains it, and shows the code behind it. A sibling of the [Vercel Feature Lab](https://vercel.djmiskey.com) and the [Cloudflare Feature Lab](https://lab.djmiskey.com), built to the same pattern.
 
-**Stack:** Next.js 16 (App Router, TypeScript, Cache Components) · GSAP 3 with `@gsap/react` · Rive (`@rive-app/react-canvas`) · Three.js with react-three-fiber and drei · deployed on Vercel at `motion.djmiskey.com` (planned).
+**Stack:** Next.js 16 (App Router, TypeScript, Cache Components) · GSAP 3 with `@gsap/react` · Rive (`@rive-app/react-canvas`) · Three.js with react-three-fiber and drei · live at **https://motion.djmiskey.com** (`motion-feature-lab.vercel.app` redirects there with a 308).
 
 ## Run it
 
@@ -18,7 +18,7 @@ Production build locally: `npm run build && npm start`.
 ```bash
 npm run lint
 npm run typecheck
-npm test           # Vitest: feature registry
+npm test           # Vitest: feature registry, robots.txt and sitemap
 npm run build
 ```
 
@@ -44,6 +44,7 @@ CI (`.github/workflows/ci.yml`) runs all four on every pull request.
 - **GSAP** is free for all uses, including the formerly paid plugins (ScrollTrigger, SplitText, MorphSVG, DrawSVG, Flip), all in the `gsap` package. The only restriction is building a no-code animation tool that competes with Webflow. Animations live in `useGSAP()`, which scopes selectors and reverts everything on unmount.
 - **Rive**: the runtime is WebAssembly. Rive loads it from the jsDelivr CDN by default; `src/lib/rive-runtime.ts` points it at `/rive/rive.wasm` on this site and turns the CDN fallback off, and `scripts/copy-rive-wasm.mjs` copies the file from `node_modules` before `dev` and `build`. Only `rive-*` pages get `'wasm-unsafe-eval'` in their CSP. State machine *inputs* are deprecated in favour of **data binding**, which the later Rive pages use. Files exported from Rive's free plan carry a Rive splash screen; the examples here are MIT-licensed files from Rive's own repositories.
 - **Three.js** runs through react-three-fiber 9 (React 19). The scene uses `fallback` for browsers without WebGL, and `frameloop="demand"` when motion is reduced or the canvas is off screen.
+- **Hosting**: Vercel project `motion-feature-lab` (team two-seats), connected to GitHub, so every PR gets a preview and `main` deploys to production. `motion.djmiskey.com` is a DNS-only `CNAME` in Cloudflare (proxy off). `app/robots.ts` and `app/sitemap.ts` (generated from the registry) point crawlers at the custom domain.
 - **CSP**: everything loads from this site (`connect-src 'self'`): `.riv` files, models and textures go in `public/`. Script-src allows `'unsafe-inline'` because the pages are prerendered (see the Vercel lab's Security page for the nonce version).
 
 ## Roadmap
