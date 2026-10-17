@@ -1,5 +1,6 @@
 // Single source of truth for the dashboard: every technique in the lab,
-// grouped by category. `ready: false` marks pages from later phases.
+// grouped by category. `ready: false` would mark an unbuilt page (bring back
+// the src/app/[slug] placeholder route if you add one).
 export type Category = "Foundations" | "GSAP" | "Rive" | "Three.js" | "Together" | "Performance";
 
 export type Feature = {
@@ -47,7 +48,7 @@ export const features: Feature[] = [
   { slug: "rive-three", name: "Rive × Three.js", category: "Together", phase: 5, ready: true,
     summary: "A Rive interface layered over, or textured onto, a 3D scene." },
 
-  { slug: "performance", name: "Performance", category: "Performance", phase: 6, ready: false,
+  { slug: "performance", name: "Performance", category: "Performance", phase: 6, ready: true,
     summary: "Lazy loading, frame budgets, and fallbacks without WebGL." },
 ];
 

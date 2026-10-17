@@ -1,6 +1,6 @@
 import { CodePeek } from "@/components/CodePeek";
 import { Demo, FeaturePage } from "@/components/FeaturePage";
-import { RivePlayer } from "./RivePlayer";
+import { RivePlayer } from "./lazy";
 
 export default function RiveBasicsPage() {
   return (

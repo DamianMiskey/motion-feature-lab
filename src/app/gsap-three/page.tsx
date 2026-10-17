@@ -1,6 +1,6 @@
 import { CodePeek } from "@/components/CodePeek";
 import { Demo, FeaturePage } from "@/components/FeaturePage";
-import { ScrollCamera } from "./ScrollCamera";
+import { ScrollCamera } from "./lazy";
 
 export default function GsapThreePage() {
   return (
