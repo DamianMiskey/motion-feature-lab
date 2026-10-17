@@ -13,9 +13,16 @@ import { Stage } from "@/components/ui";
 export function ThreeCanvas({
   label,
   className = "h-95",
+  overlay,
   children,
   ...props
-}: Omit<CanvasProps, "children" | "frameloop" | "fallback"> & { label: string; className?: string; children: (animate: boolean) => ReactNode }) {
+}: Omit<CanvasProps, "children" | "frameloop" | "fallback"> & {
+  label: string;
+  className?: string;
+  /** DOM laid over the canvas, inside the same React tree (so context works). */
+  overlay?: ReactNode;
+  children: (animate: boolean) => ReactNode;
+}) {
   const { reduced } = useMotion();
   const wrapper = useRef<HTMLDivElement>(null);
   const animate = useInView(wrapper) && !reduced;
@@ -29,6 +36,7 @@ export function ThreeCanvas({
       >
         {children(animate)}
       </Canvas>
+      {overlay}
     </Stage>
   );
 }
