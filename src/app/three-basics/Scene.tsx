@@ -6,6 +6,7 @@ import { useRef } from "react";
 import type { Mesh } from "three";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { useInView } from "@/components/motion/useInView";
+import { Stage } from "@/components/ui";
 
 // A mesh is geometry (its shape) plus a material (how light hits it).
 // useFrame runs every rendered frame; `delta` is the seconds since the last
@@ -33,14 +34,14 @@ export function Scene() {
   const animate = inView && !reduced;
 
   return (
-    <div ref={wrapper} className="stage tall">
+    <Stage ref={wrapper} className="h-95">
       {/* frameloop "always" redraws continuously; "demand" only redraws when
           something changes (e.g. you drag the camera), costing nothing at rest. */}
       <Canvas
         shadows
         camera={{ position: [3, 2.5, 4], fov: 45 }}
         frameloop={animate ? "always" : "demand"}
-        fallback={<p className="muted" style={{ padding: "1rem" }}>This browser can&apos;t show WebGL, so the 3D scene is skipped.</p>}
+        fallback={<p className="p-4 text-muted">This browser can&apos;t show WebGL, so the 3D scene is skipped.</p>}
         aria-label="A spinning torus knot on a floor. Drag to orbit the camera."
       >
         <color attach="background" args={["#14131a"]} />
@@ -53,6 +54,6 @@ export function Scene() {
         </mesh>
         <OrbitControls enableDamping={!reduced} minDistance={2.5} maxDistance={10} maxPolarAngle={Math.PI / 2.1} />
       </Canvas>
-    </div>
+    </Stage>
   );
 }

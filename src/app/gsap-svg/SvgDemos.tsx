@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { Button } from "@/components/ui";
 
 // Shapes for the morph demo, all drawn in a 200 × 200 box. MorphSVG works out
 // how to turn one path into another, even with different numbers of points.
@@ -44,26 +45,26 @@ export function SvgDemos() {
   return (
     <div ref={root}>
       <h3>1. DrawSVG: a line drawn by hand</h3>
-      <svg viewBox="0 0 300 160" className="svg-stage" role="img" aria-label="A handwritten scribble being drawn">
+      <svg viewBox="0 0 300 160" className="mb-2 block max-h-55 w-full rounded-xl border border-line bg-bg" role="img" aria-label="A handwritten scribble being drawn">
         <path className="signature" d={SIGNATURE} fill="none" stroke="var(--accent)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <div className="controls">
-        <button onClick={() => draw.current?.restart()}>Draw again</button>
-        <input type="range" min={0} max={1} step={0.001} value={drawn} aria-label="How much of the line is drawn"
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <Button onClick={() => draw.current?.restart()}>Draw again</Button>
+        <input className="min-w-0 flex-1" type="range" min={0} max={1} step={0.001} value={drawn} aria-label="How much of the line is drawn"
           onChange={(e) => draw.current?.pause().progress(Number(e.target.value))} />
-        <span className="small stamp">{Math.round(drawn * 100)}%</span>
+        <span className="text-sm tabular-nums">{Math.round(drawn * 100)}%</span>
       </div>
 
       <h3>2. MorphSVG: one shape into another</h3>
-      <svg viewBox="0 0 200 200" className="svg-stage small-stage" role="img" aria-label={`A ${shape}`}>
+      <svg viewBox="0 0 200 200" className="mb-2 block max-h-55 w-full rounded-xl border border-line bg-bg max-w-55 p-2" role="img" aria-label={`A ${shape}`}>
         <path className="morph" d={SHAPES.circle} fill="var(--accent)" />
       </svg>
-      <div className="controls">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
         {(Object.keys(SHAPES) as Shape[]).map((s) => (
-          <button key={s} className={s === shape ? undefined : "ghost"} onClick={() => morphTo(s)} aria-pressed={s === shape}>{s}</button>
+          <Button key={s} variant={s === shape ? "primary" : "ghost"} onClick={() => morphTo(s)} aria-pressed={s === shape}>{s}</Button>
         ))}
       </div>
-      {reduced && <p className="small muted">Reduced motion: the line is shown complete and shapes switch without morphing.</p>}
+      {reduced && <p className="text-sm text-muted">Reduced motion: the line is shown complete and shapes switch without morphing.</p>}
     </div>
   );
 }

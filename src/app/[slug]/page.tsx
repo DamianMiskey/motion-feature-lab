@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { panel } from "@/components/FeaturePage";
 import { features, getFeature } from "@/lib/features";
 
 // Placeholder pages for features from later phases. Built pages (like
@@ -13,12 +14,12 @@ export default async function Planned({ params }: { params: Promise<{ slug: stri
   const feature = getFeature(slug);
   if (!feature || feature.ready) notFound();
   return (
-    <article className="feature">
-      <header className="feature-head">
+    <article>
+      <header className="mb-6">
         <h1>{feature.name}</h1>
-        <p className="tagline">{feature.summary}</p>
+        <p className="m-0 text-[1.05rem] text-muted">{feature.summary}</p>
       </header>
-      <section className="demo">
+      <section className={panel}>
         <h2>Coming in phase {feature.phase}</h2>
         <p>This feature isn&apos;t built yet. See the roadmap in the README.</p>
         <Link href="/">← Back to all features</Link>

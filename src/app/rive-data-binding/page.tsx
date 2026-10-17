@@ -25,7 +25,7 @@ export default function RiveDataBindingPage() {
         <StocksDashboard />
       </Demo>
 
-      <p className="small muted"><code>stocks.riv</code> is an MIT example from Rive&apos;s own repository.</p>
+      <p className="text-sm text-muted"><code>stocks.riv</code> is an MIT example from Rive&apos;s own repository.</p>
       <CodePeek file="app/rive-data-binding/StocksDashboard.tsx" />
       <CodePeek file="lib/rive-color.ts" />
     </FeaturePage>

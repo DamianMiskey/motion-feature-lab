@@ -4,6 +4,7 @@ import "@/lib/rive-runtime";
 import { Fit, Layout, useRive } from "@rive-app/react-canvas";
 import { useState } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
+import { Button, Stage } from "@/components/ui";
 
 type Info = { artboard: string; stateMachines: string[]; animations: string[] };
 
@@ -44,15 +45,15 @@ export function RivePlayer({ src, label, interactive = false }: { src: string; l
 
   return (
     <figure style={{ margin: 0 }}>
-      <div className="stage" style={{ height: 260 }}>
+      <Stage className="h-65">
         <RiveComponent aria-label={label} role="img" />
-      </div>
-      <div className="controls">
-        <button onClick={toggle} disabled={!info}>{playing ? "Pause" : "Play"}</button>
-        {interactive && <span className="small muted">Hover and click the animation: its state machine reacts to the pointer.</span>}
+      </Stage>
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <Button onClick={toggle} disabled={!info}>{playing ? "Pause" : "Play"}</Button>
+        {interactive && <span className="text-sm text-muted">Hover and click the animation: its state machine reacts to the pointer.</span>}
       </div>
       {info && (
-        <figcaption className="small muted">
+        <figcaption className="text-sm text-muted">
           Artboard <code>{info.artboard}</code> · state machines: {info.stateMachines.map((n) => <code key={n}>{n} </code>)}
           {info.stateMachines.length === 0 && "none"} · animations: {info.animations.map((n) => <code key={n}>{n} </code>)}
           {info.animations.length === 0 && "none"}

@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useState } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
+import { Button, Stage } from "@/components/ui";
 
 gsap.registerPlugin(useGSAP);
 
@@ -32,30 +33,31 @@ export function TimelineDemo() {
 
   return (
     <>
-      <div ref={stage} className="stage" style={{ height: 230, display: "grid", alignContent: "space-evenly", padding: "0 28px" }}>
-        <div className="box a" />
-        <div className="box b" />
-        <div className="box c" />
-      </div>
-      <div className="controls">
-        <button onClick={() => tl.current?.play()}>Play</button>
-        <button className="ghost" onClick={() => tl.current?.pause()}>Pause</button>
-        <button className="ghost" onClick={() => tl.current?.reverse()}>Reverse</button>
-        <button className="ghost" onClick={() => tl.current?.restart()}>Restart</button>
-        <label className="small">Ease{" "}
+      <Stage ref={stage} className="grid h-58 content-evenly px-7">
+        <div className="box a size-16 rounded-xl bg-accent" />
+        <div className="box b size-16 rounded-xl bg-accent" />
+        <div className="box c size-16 rounded-xl bg-accent" />
+      </Stage>
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <Button onClick={() => tl.current?.play()}>Play</Button>
+        <Button variant="ghost" onClick={() => tl.current?.pause()}>Pause</Button>
+        <Button variant="ghost" onClick={() => tl.current?.reverse()}>Reverse</Button>
+        <Button variant="ghost" onClick={() => tl.current?.restart()}>Restart</Button>
+        <label className="text-sm">Ease{" "}
           <select value={ease} onChange={(e) => setEase(e.target.value)}>
             {EASES.map((e) => <option key={e}>{e}</option>)}
           </select>
         </label>
       </div>
-      <div className="controls">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
         <input
+          className="min-w-0 flex-1"
           type="range" min={0} max={1} step={0.001} value={progress} aria-label="Timeline progress"
           onChange={(e) => tl.current?.pause().progress(Number(e.target.value))}
         />
-        <span className="small stamp">{Math.round(progress * 100)}%</span>
+        <span className="text-sm tabular-nums">{Math.round(progress * 100)}%</span>
       </div>
-      {reduced && <p className="small muted">Reduced motion: the timeline doesn&apos;t autoplay and only fades. Press Play, or switch to Full in the sidebar.</p>}
+      {reduced && <p className="text-sm text-muted">Reduced motion: the timeline doesn&apos;t autoplay and only fades. Press Play, or switch to Full in the sidebar.</p>}
     </>
   );
 }

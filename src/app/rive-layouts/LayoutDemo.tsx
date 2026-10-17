@@ -3,6 +3,7 @@
 import "@/lib/rive-runtime";
 import { Alignment, Fit, Layout, useRive } from "@rive-app/react-canvas";
 import { useEffect, useState } from "react";
+import { Stage } from "@/components/ui";
 
 const FITS = [Fit.Layout, Fit.Contain, Fit.Cover, Fit.Fill, Fit.FitWidth, Fit.FitHeight, Fit.ScaleDown, Fit.None];
 const ALIGNMENTS = [Alignment.Center, Alignment.TopLeft, Alignment.TopCenter, Alignment.TopRight, Alignment.CenterLeft, Alignment.CenterRight, Alignment.BottomLeft, Alignment.BottomCenter, Alignment.BottomRight];
@@ -45,25 +46,25 @@ export function LayoutDemo() {
 
   return (
     <>
-      <div className="controls">
-        <label className="small">fit{" "}
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <label className="text-sm">fit{" "}
           <select value={fit} onChange={(e) => setFit(e.target.value as Fit)}>{FITS.map((f) => <option key={f}>{f}</option>)}</select>
         </label>
-        <label className="small">alignment{" "}
+        <label className="text-sm">alignment{" "}
           <select value={alignment} onChange={(e) => setAlignment(e.target.value as Alignment)} disabled={fit === Fit.Layout}>
             {ALIGNMENTS.map((a) => <option key={a}>{a}</option>)}
           </select>
         </label>
       </div>
-      <div className="controls">
-        <label className="small slider-row"><span>width</span><input type="range" min={30} max={100} value={width} onChange={(e) => setWidth(Number(e.target.value))} aria-label="Container width" /><span className="stamp">{width}%</span></label>
-        <label className="small slider-row"><span>height</span><input type="range" min={160} max={480} value={height} onChange={(e) => setHeight(Number(e.target.value))} aria-label="Container height" /><span className="stamp">{height}px</span></label>
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <label className="flex flex-1 items-center gap-2 text-sm"><span>width</span><input className="min-w-0 flex-1" type="range" min={30} max={100} value={width} onChange={(e) => setWidth(Number(e.target.value))} aria-label="Container width" /><span className="tabular-nums">{width}%</span></label>
+        <label className="flex flex-1 items-center gap-2 text-sm"><span>height</span><input className="min-w-0 flex-1" type="range" min={160} max={480} value={height} onChange={(e) => setHeight(Number(e.target.value))} aria-label="Container height" /><span className="tabular-nums">{height}px</span></label>
       </div>
-      <p className="small muted">Artboard size now: <strong className="stamp">{artboard || "…"}</strong> {fit === Fit.Layout ? "(follows the container)" : "(as designed; the drawing is scaled to fit)"}</p>
+      <p className="text-sm text-muted">Artboard size now: <strong className="tabular-nums">{artboard || "…"}</strong> {fit === Fit.Layout ? "(follows the container)" : "(as designed; the drawing is scaled to fit)"}</p>
       {/* The canvas follows its container; Rive redraws at the new size. */}
-      <div className="stage" style={{ width: `${width}%`, height }}>
+      <Stage style={{ width: `${width}%`, height }}>
         <RiveComponent role="img" aria-label={`A Rive layout drawn with fit ${fit}`} />
-      </div>
+      </Stage>
     </>
   );
 }

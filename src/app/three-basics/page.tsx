@@ -22,7 +22,7 @@ export default function ThreeBasicsPage() {
     >
       <Demo title="Drag to orbit, scroll to zoom">
         <Scene />
-        <p className="small muted">
+        <p className="text-sm text-muted">
           With motion reduced or the scene off screen, it stops spinning and only redraws when you move the camera (
           <code>frameloop=&quot;demand&quot;</code>). Turn on <strong>Show FPS</strong> in the sidebar to see the difference.
         </p>

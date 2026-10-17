@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { useRef } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { useInView } from "@/components/motion/useInView";
+import { Stage } from "@/components/ui";
 
 gsap.registerPlugin(useGSAP);
 
@@ -32,10 +33,10 @@ export function MotionDemo() {
 
   return (
     <>
-      <div ref={stage} className="stage" style={{ height: 120, padding: 28 }}>
-        <div className="box" />
-      </div>
-      <p className="small muted">
+      <Stage ref={stage} className="h-30 p-7">
+        <div className="box size-16 rounded-xl bg-accent" />
+      </Stage>
+      <p className="text-sm text-muted">
         Mode: <strong>{reduced ? "reduced (fade only)" : "full (moves and spins)"}</strong> · {inView ? "on screen: playing" : "off screen: paused"}
       </p>
     </>

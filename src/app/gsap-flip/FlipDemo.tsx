@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { Flip, gsap, useGSAP } from "@/lib/gsap";
+import { Button, cx } from "@/components/ui";
 
 type Filter = "all" | "warm" | "cool";
 const TILES = [
@@ -46,19 +47,19 @@ export function FlipDemo() {
 
   return (
     <>
-      <div className="controls">
-        <button onClick={() => change(() => setOrder(gsap.utils.shuffle([...order])))}>Shuffle</button>
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <Button onClick={() => change(() => setOrder(gsap.utils.shuffle([...order])))}>Shuffle</Button>
         {(["all", "warm", "cool"] as Filter[]).map((f) => (
-          <button key={f} className={f === filter ? undefined : "ghost"} aria-pressed={f === filter} onClick={() => change(() => setFilter(f))}>{f}</button>
+          <Button key={f} variant={f === filter ? "primary" : "ghost"} aria-pressed={f === filter} onClick={() => change(() => setFilter(f))}>{f}</Button>
         ))}
-        <span className="small muted">Click a tile to expand it.</span>
+        <span className="text-sm text-muted">Click a tile to expand it.</span>
       </div>
-      <div ref={grid} className="flip-grid">
+      <div ref={grid} className="grid min-h-50 grid-cols-[repeat(auto-fill,minmax(90px,1fr))] gap-2.5">
         {visible.map((t) => (
           <button
             key={t.id}
             data-flip-id={t.id}
-            className={`flip-tile${expanded === t.id ? " expanded" : ""}`}
+            className={cx("flip-tile aspect-square cursor-pointer rounded-xl border-0 text-2xl font-bold text-white", expanded === t.id && "col-span-2 row-span-2")}
             style={{ background: `hsl(${t.hue} 70% 55%)` }}
             aria-expanded={expanded === t.id}
             onClick={() => change(() => setExpanded(expanded === t.id ? null : t.id))}
@@ -67,7 +68,7 @@ export function FlipDemo() {
           </button>
         ))}
       </div>
-      {reduced && <p className="small muted">Reduced motion: the layout still changes, instantly.</p>}
+      {reduced && <p className="text-sm text-muted">Reduced motion: the layout still changes, instantly.</p>}
     </>
   );
 }
