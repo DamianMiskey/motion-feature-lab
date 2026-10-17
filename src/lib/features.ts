@@ -17,13 +17,13 @@ export const features: Feature[] = [
 
   { slug: "gsap-basics", name: "Tweens & timelines", category: "GSAP", phase: 1, ready: true,
     summary: "Animate anything, sequence it, and scrub through it." },
-  { slug: "gsap-scroll", name: "ScrollTrigger", category: "GSAP", phase: 2, ready: false,
+  { slug: "gsap-scroll", name: "ScrollTrigger", category: "GSAP", phase: 2, ready: true,
     summary: "Animations driven by scrolling: pinning, scrubbing, parallax." },
-  { slug: "gsap-text", name: "SplitText", category: "GSAP", phase: 2, ready: false,
+  { slug: "gsap-text", name: "SplitText", category: "GSAP", phase: 2, ready: true,
     summary: "Animate words, lines and characters, accessibly." },
-  { slug: "gsap-svg", name: "SVG: draw & morph", category: "GSAP", phase: 2, ready: false,
+  { slug: "gsap-svg", name: "SVG: draw & morph", category: "GSAP", phase: 2, ready: true,
     summary: "DrawSVG and MorphSVG: line drawing and shape morphing." },
-  { slug: "gsap-flip", name: "Flip", category: "GSAP", phase: 2, ready: false,
+  { slug: "gsap-flip", name: "Flip", category: "GSAP", phase: 2, ready: true,
     summary: "Smooth layout changes: reorder, filter, expand." },
 
   { slug: "rive-basics", name: "Rive playback", category: "Rive", phase: 1, ready: true,
