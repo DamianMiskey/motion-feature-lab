@@ -42,9 +42,9 @@ export const features: Feature[] = [
   { slug: "three-shaders", name: "Shaders", category: "Three.js", phase: 4, ready: true,
     summary: "Write a custom GLSL shader and animate its uniforms." },
 
-  { slug: "gsap-three", name: "GSAP × Three.js", category: "Together", phase: 5, ready: false,
+  { slug: "gsap-three", name: "GSAP × Three.js", category: "Together", phase: 5, ready: true,
     summary: "Scroll-driven camera moves through a 3D scene." },
-  { slug: "rive-three", name: "Rive × Three.js", category: "Together", phase: 5, ready: false,
+  { slug: "rive-three", name: "Rive × Three.js", category: "Together", phase: 5, ready: true,
     summary: "A Rive interface layered over, or textured onto, a 3D scene." },
 
   { slug: "performance", name: "Performance", category: "Performance", phase: 6, ready: false,

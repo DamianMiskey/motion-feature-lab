@@ -1,6 +1,6 @@
 "use client";
 
-import { Center, ContactShadows, Html, OrbitControls, useAnimations, useGLTF } from "@react-three/drei";
+import { Center, ContactShadows, OrbitControls, useAnimations, useGLTF, useProgress } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState } from "react";
 import type { Group } from "three";
 import { ThreeCanvas } from "@/components/three/ThreeCanvas";
@@ -38,18 +38,25 @@ function Fox({ clip, speed, playing }: { clip: string; speed: number; playing: b
 }
 useGLTF.preload(MODEL, false, false);
 
+// Three.js's loading manager, read outside the scene: shows a message over
+// the canvas while the model downloads.
+function LoadingNote() {
+  const { active, progress } = useProgress();
+  return active ? <p className="absolute inset-0 m-0 grid place-items-center text-sm text-muted">Loading model… {Math.round(progress)}%</p> : null;
+}
+
 export function FoxScene() {
   const [clip, setClip] = useState("Survey");
   const [speed, setSpeed] = useState(1);
   return (
     <>
-      <ThreeCanvas shadows camera={{ position: [4, 2.2, 5], fov: 40 }} label={`A low-poly fox playing its ${clip} animation`}>
+      <ThreeCanvas shadows camera={{ position: [4, 2.2, 5], fov: 40 }} label={`A low-poly fox playing its ${clip} animation`} overlay={<LoadingNote />}>
         {(animate) => (
           <>
             <color attach="background" args={["#14131a"]} />
             <hemisphereLight args={["#ffffff", "#3a3550", 1.2]} />
             <directionalLight position={[3, 5, 2]} intensity={1.8} />
-            <Suspense fallback={<Html center className="text-sm text-muted">Loading model…</Html>}>
+            <Suspense fallback={null}>
               <Center top>
                 <Fox clip={clip} speed={speed} playing={animate} />
               </Center>
