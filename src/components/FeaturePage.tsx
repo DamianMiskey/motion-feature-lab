@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 
+// The boxed look shared by explanation panels and demos.
+export const panel = "rounded-xl border border-line bg-surface px-5 py-4";
+
 // Standard frame for every feature page: what it is, when to use it, then the live demo.
 export function FeaturePage({
   title,
@@ -17,20 +20,20 @@ export function FeaturePage({
   children: ReactNode;
 }) {
   return (
-    <article className="feature">
-      <header className="feature-head">
+    <article>
+      <header className="mb-6">
         <h1>{title}</h1>
-        <p className="tagline">{tagline}</p>
+        <p className="m-0 text-[1.05rem] text-muted">{tagline}</p>
       </header>
-      <div className="explain">
-        <section>
+      <div className="mb-6 grid gap-4 md:grid-cols-[1.4fr_1fr]">
+        <section className={panel}>
           <h2>What it is</h2>
-          <div>{whatItIs}</div>
+          <div className="[&_p]:m-0">{whatItIs}</div>
         </section>
-        <section>
+        <section className={panel}>
           <h2>When to use it</h2>
-          <ul>{whenToUse.map((w) => <li key={w}>{w}</li>)}</ul>
-          <a className="docs" href={docs} target="_blank" rel="noreferrer">Official docs ↗</a>
+          <ul className="mb-2">{whenToUse.map((w) => <li key={w}>{w}</li>)}</ul>
+          <a className="text-sm" href={docs} target="_blank" rel="noreferrer">Official docs ↗</a>
         </section>
       </div>
       {children}
@@ -41,13 +44,9 @@ export function FeaturePage({
 // A boxed live demo with a title.
 export function Demo({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="demo">
+    <section className={`${panel} mb-4`}>
       <h2>{title}</h2>
       {children}
     </section>
   );
-}
-
-export function JsonView({ value }: { value: unknown }) {
-  return <pre className="json">{JSON.stringify(value, null, 2)}</pre>;
 }

@@ -22,10 +22,10 @@ export default function RiveLayoutsPage() {
     >
       <Demo title="Resize the container, change the fit">
         <LayoutDemo />
-        <p className="small muted">Start with <code>layout</code> and drag width: the contents rearrange. Switch to <code>contain</code> and they only scale.</p>
+        <p className="text-sm text-muted">Start with <code>layout</code> and drag width: the contents rearrange. Switch to <code>contain</code> and they only scale.</p>
       </Demo>
 
-      <p className="small muted"><code>layout_test.riv</code> is an MIT example from Rive&apos;s own repository.</p>
+      <p className="text-sm text-muted"><code>layout_test.riv</code> is an MIT example from Rive&apos;s own repository.</p>
       <CodePeek file="app/rive-layouts/LayoutDemo.tsx" />
     </FeaturePage>
   );

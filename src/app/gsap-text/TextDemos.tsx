@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
+import { Button } from "@/components/ui";
 
 // SplitText wraps lines, words or characters in their own elements so each
 // can be animated. aria: "auto" puts the original sentence in an aria-label
@@ -55,21 +56,21 @@ export function TextDemos() {
   return (
     <div ref={root}>
       <h3>1. Lines from behind a mask</h3>
-      <p className="lines-demo big-text">
+      <p className="lines-demo text-[clamp(1.25rem,2.6vw,1.75rem)] leading-snug font-semibold">
         Motion is a language. Used well it explains what changed, where things went, and what to look at next. Used badly it just
         gets in the way.
       </p>
 
       <h3>2. Characters</h3>
-      <p className="chars-demo big-text">Every letter on its own.</p>
-      <button onClick={() => charsTween.current?.restart()} disabled={reduced}>Play</button>
+      <p className="chars-demo text-[clamp(1.25rem,2.6vw,1.75rem)] leading-snug font-semibold">Every letter on its own.</p>
+      <Button onClick={() => charsTween.current?.restart()} disabled={reduced}>Play</Button>
 
       <h3>3. Words lit by scrolling</h3>
-      <p className="words-demo big-text">
+      <p className="words-demo text-[clamp(1.25rem,2.6vw,1.75rem)] leading-snug font-semibold">
         Scroll slowly and each word brightens in turn, as if the page were reading itself to you. Scroll back and they fade again.
       </p>
-      {reduced && <p className="small muted">Reduced motion: the text isn&apos;t split or animated.</p>}
-      <div style={{ height: "30vh" }} aria-hidden="true" />
+      {reduced && <p className="text-sm text-muted">Reduced motion: the text isn&apos;t split or animated.</p>}
+      <div className="h-[30vh]" aria-hidden="true" />
     </div>
   );
 }

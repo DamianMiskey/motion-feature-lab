@@ -14,9 +14,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <MotionProvider>
-          <div className="shell">
+          <div className="grid min-h-screen md:grid-cols-[240px_1fr]">
             <Nav />
-            <main className="content">{children}</main>
+            <main className="w-full max-w-250 px-[clamp(16px,4vw,3rem)] py-8">{children}</main>
           </div>
           <FpsMeter />
         </MotionProvider>

@@ -29,7 +29,7 @@ export default function RiveBasicsPage() {
         <RivePlayer src="/rive/rating.riv" label="Interactive star rating" interactive />
       </Demo>
 
-      <p className="small muted">
+      <p className="text-sm text-muted">
         Both files are MIT-licensed examples from Rive&apos;s own repositories (see <code>public/rive/CREDITS.md</code>). Files
         exported from Rive&apos;s free plan show a small Rive splash screen.
       </p>

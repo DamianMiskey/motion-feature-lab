@@ -23,8 +23,8 @@ function Meter() {
     return () => cancelAnimationFrame(id);
   }, []);
   return (
-    <div className="fps-meter" role="status" aria-label="Frames per second">
-      {fps ?? "…"} <span>fps</span>
+    <div className="fixed right-3 bottom-3 z-50 rounded-md bg-fg px-2 py-1 font-mono text-sm font-semibold text-bg tabular-nums" role="status" aria-label="Frames per second">
+      {fps ?? "…"} <span className="font-normal opacity-70">fps</span>
     </div>
   );
 }

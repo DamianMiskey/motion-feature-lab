@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { cx } from "@/components/ui";
 
 const PANELS = ["Design", "Animate", "Scroll", "Ship"];
 
@@ -59,32 +60,32 @@ export function ScrollDemos() {
 
   return (
     <div ref={root}>
-      <label className="small check controls">
+      <label className="mb-2 flex items-center gap-1.5 text-sm">
         <input type="checkbox" checked={markers} onChange={(e) => setMarkers(e.target.checked)} /> Show ScrollTrigger markers (start/end lines)
       </label>
 
       <h3>1. Reveal on enter</h3>
-      <div className="cards">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-2.5">
         {["Enters at 85% of the viewport", "Plays once, reverses when you scroll back up", "toggleActions controls all four events"].map((t) => (
-          <div key={t} className="reveal-card cell">{t}</div>
+          <div key={t} className="reveal-card rounded-lg border border-line bg-bg px-3 py-2.5">{t}</div>
         ))}
       </div>
 
       <h3>2. Scrub: progress follows the scrollbar</h3>
-      <div className="scrub-section cell">
-        <div className="scrub-track"><div className="scrub-bar" style={{ transform: reduced ? "scaleX(1)" : "scaleX(0)" }} /></div>
-        <div className="scrub-spinner box" />
-        <p className="small muted">{reduced ? "Reduced motion: shown in its finished state." : "Scroll up and down slowly: the bar and the square move with you. scrub: 0.5 adds half a second of smoothing to the square."}</p>
+      <div className="scrub-section grid gap-3 rounded-lg border border-line bg-bg px-3 py-2.5">
+        <div className="h-2.5 overflow-hidden rounded-full bg-code"><div className="scrub-bar h-full origin-left bg-accent" style={{ transform: reduced ? "scaleX(1)" : "scaleX(0)" }} /></div>
+        <div className="scrub-spinner size-16 rounded-xl bg-accent" />
+        <p className="text-sm text-muted">{reduced ? "Reduced motion: shown in its finished state." : "Scroll up and down slowly: the bar and the square move with you. scrub: 0.5 adds half a second of smoothing to the square."}</p>
       </div>
 
       <h3>3. Pin and scroll sideways</h3>
-      <div className="pin-section">
-        <div className={`panel-track${reduced ? " stacked" : ""}`}>
-          {PANELS.map((p, i) => <div key={p} className="panel"><span className="small muted">{i + 1} / {PANELS.length}</span><strong>{p}</strong></div>)}
+      <div className="pin-section overflow-hidden rounded-xl">
+        <div className={cx("panel-track flex w-full gap-4", reduced && "flex-wrap")}>
+          {PANELS.map((p, i) => <div key={p} className={cx("flex flex-col justify-between rounded-xl bg-linear-135 from-accent to-pink p-4 text-white", reduced ? "h-30 flex-1 basis-45 text-xl" : "h-55 flex-none basis-[min(70%,420px)] text-[1.6rem]")}><span className="text-sm text-white/75">{i + 1} / {PANELS.length}</span><strong>{p}</strong></div>)}
         </div>
       </div>
-      <p className="small muted">{reduced ? "Reduced motion: the panels are listed instead of pinned." : "The section pins while you scroll, then lets go after the last panel."}</p>
-      <div style={{ height: "40vh" }} aria-hidden="true" />
+      <p className="text-sm text-muted">{reduced ? "Reduced motion: the panels are listed instead of pinned." : "The section pins while you scroll, then lets go after the last panel."}</p>
+      <div className="h-[40vh]" aria-hidden="true" />
     </div>
   );
 }
