@@ -35,11 +35,11 @@ export const features: Feature[] = [
 
   { slug: "three-basics", name: "A first 3D scene", category: "Three.js", phase: 1, ready: true,
     summary: "Camera, lights, meshes and orbit controls with react-three-fiber." },
-  { slug: "three-models", name: "Models", category: "Three.js", phase: 4, ready: false,
+  { slug: "three-models", name: "Models", category: "Three.js", phase: 4, ready: true,
     summary: "Load glTF models, play their animations, frame them." },
-  { slug: "three-materials", name: "Materials & lighting", category: "Three.js", phase: 4, ready: false,
+  { slug: "three-materials", name: "Materials & lighting", category: "Three.js", phase: 4, ready: true,
     summary: "Physically based materials, environment lighting, shadows." },
-  { slug: "three-shaders", name: "Shaders", category: "Three.js", phase: 4, ready: false,
+  { slug: "three-shaders", name: "Shaders", category: "Three.js", phase: 4, ready: true,
     summary: "Write a custom GLSL shader and animate its uniforms." },
 
   { slug: "gsap-three", name: "GSAP × Three.js", category: "Together", phase: 5, ready: false,

@@ -12,7 +12,9 @@ const policy = (extraScript = "") => [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  "connect-src 'self'",
+  // blob: is for 3D models: the glTF loader unpacks embedded textures into
+  // blob: URLs created by the page itself, then fetches them.
+  "connect-src 'self' blob:",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
