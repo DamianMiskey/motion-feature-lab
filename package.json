@@ -1,0 +1,37 @@
+{
+  "name": "motion-feature-lab",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "predev": "node scripts/copy-rive-wasm.mjs",
+    "prebuild": "node scripts/copy-rive-wasm.mjs"
+  },
+  "dependencies": {
+    "@gsap/react": "2.1.2",
+    "@react-three/drei": "10.7.9",
+    "@react-three/fiber": "9.8.1",
+    "@rive-app/react-canvas": "4.36.0",
+    "gsap": "3.15.0",
+    "next": "16.3.8",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "0.186.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.8",
+    "typescript": "^5",
+    "vitest": "5.0.3"
+  }
+}

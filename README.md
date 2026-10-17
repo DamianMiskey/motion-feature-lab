@@ -1,0 +1,56 @@
+# Motion Feature Lab
+
+A hands-on tour of **GSAP**, **Rive** and **Three.js**. Each page demos one technique live, explains it, and shows the code behind it. A sibling of the [Vercel Feature Lab](https://vercel.djmiskey.com) and the [Cloudflare Feature Lab](https://lab.djmiskey.com), built to the same pattern.
+
+**Stack:** Next.js 16 (App Router, TypeScript, Cache Components) · GSAP 3 with `@gsap/react` · Rive (`@rive-app/react-canvas`) · Three.js with react-three-fiber and drei · deployed on Vercel at `motion.djmiskey.com` (planned).
+
+## Run it
+
+```bash
+npm install
+npm run dev        # http://localhost:3000 (copies the Rive runtime into public/ first)
+```
+
+Production build locally: `npm run build && npm start`.
+
+## Checks
+
+```bash
+npm run lint
+npm run typecheck
+npm test           # Vitest: feature registry
+npm run build
+```
+
+CI (`.github/workflows/ci.yml`) runs all four on every pull request.
+
+## Layout
+
+| Path | What lives there |
+|------|------------------|
+| `src/lib/features.ts` | Registry of all pages; drives the nav, the home page and the placeholder pages |
+| `src/app/<slug>/page.tsx` | One folder per built page; demos are Client Components next to it |
+| `src/app/[slug]/page.tsx` | Placeholder pages for later phases |
+| `src/components/motion/` | `MotionProvider` (reduced motion, FPS setting), `useInView`, `FpsMeter`, `MotionControls` |
+| `src/components/` | `FeaturePage`, `Demo`, `CodePeek`, `Nav` |
+| `public/rive/` | `.riv` files (see `CREDITS.md`) and the Rive runtime, copied in at build time |
+| `next.config.ts` | Cache Components, security headers, CSP |
+
+**Adding a page:** create `src/app/<slug>/page.tsx` using `FeaturePage`, then set `ready: true` in `features.ts`. Rive pages must be named `rive-*` (a test enforces it), because only those paths get WebAssembly in the CSP.
+
+## Notes
+
+- **Motion settings**: `MotionProvider` follows the system's `prefers-reduced-motion` by default; the sidebar can override it (Reduce / Full) and toggle an FPS meter, both remembered in `localStorage`. Demos read `useMotion().reduced` and swap large movement for fades and skip autoplay; they also pause off screen with `useInView` (Rive uses its own IntersectionObserver option, Three.js switches `frameloop` to `"demand"`). Plain CSS can use `[data-motion="reduce"]` on `<html>`.
+- **GSAP** is free for all uses, including the formerly paid plugins (ScrollTrigger, SplitText, MorphSVG, DrawSVG, Flip), all in the `gsap` package. The only restriction is building a no-code animation tool that competes with Webflow. Animations live in `useGSAP()`, which scopes selectors and reverts everything on unmount.
+- **Rive**: the runtime is WebAssembly. Rive loads it from the jsDelivr CDN by default; `src/lib/rive-runtime.ts` points it at `/rive/rive.wasm` on this site and turns the CDN fallback off, and `scripts/copy-rive-wasm.mjs` copies the file from `node_modules` before `dev` and `build`. Only `rive-*` pages get `'wasm-unsafe-eval'` in their CSP. State machine *inputs* are deprecated in favour of **data binding**, which the later Rive pages use. Files exported from Rive's free plan carry a Rive splash screen; the examples here are MIT-licensed files from Rive's own repositories.
+- **Three.js** runs through react-three-fiber 9 (React 19). The scene uses `fallback` for browsers without WebGL, and `frameloop="demand"` when motion is reduced or the canvas is off screen.
+- **CSP**: everything loads from this site (`connect-src 'self'`): `.riv` files, models and textures go in `public/`. Script-src allows `'unsafe-inline'` because the pages are prerendered (see the Vercel lab's Security page for the nonce version).
+
+## Roadmap
+
+- [x] **Phase 1: Scaffold.** Registry, motion settings (reduced motion, off-screen pausing, FPS meter), one working page each: GSAP timelines, Rive playback, a Three.js scene
+- [ ] **Phase 2: GSAP.** ScrollTrigger, SplitText, DrawSVG and MorphSVG, Flip
+- [ ] **Phase 3: Rive.** Data binding, layouts and responsive artboards
+- [ ] **Phase 4: Three.js.** glTF models and animations, materials and lighting, custom shaders
+- [ ] **Phase 5: Together.** GSAP driving a 3D camera on scroll, Rive with Three.js
+- [ ] **Phase 6: Performance.** Lazy loading heavy libraries, frame budgets, no-WebGL fallbacks
