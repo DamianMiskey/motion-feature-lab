@@ -1,6 +1,6 @@
 import { CodePeek } from "@/components/CodePeek";
 import { Demo, FeaturePage } from "@/components/FeaturePage";
-import { LayoutDemo } from "./LayoutDemo";
+import { LayoutDemo } from "./lazy";
 
 export default function RiveLayoutsPage() {
   return (

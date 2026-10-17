@@ -1,6 +1,6 @@
 import { CodePeek } from "@/components/CodePeek";
 import { Demo, FeaturePage } from "@/components/FeaturePage";
-import { MaterialsScene } from "./MaterialsScene";
+import { MaterialsScene } from "./lazy";
 
 export default function ThreeMaterialsPage() {
   return (

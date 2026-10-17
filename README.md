@@ -28,16 +28,15 @@ CI (`.github/workflows/ci.yml`) runs all four on every pull request.
 
 | Path | What lives there |
 |------|------------------|
-| `src/lib/features.ts` | Registry of all pages; drives the nav, the home page and the placeholder pages |
-| `src/app/<slug>/page.tsx` | One folder per built page; demos are Client Components next to it |
-| `src/app/[slug]/page.tsx` | Placeholder pages for later phases |
+| `src/lib/features.ts` | Registry of all pages; drives the nav, the home page and the sitemap |
+| `src/app/<slug>/page.tsx` | One folder per page; demos are Client Components next to it, and `lazy.tsx` wraps the heavy ones |
 | `src/components/motion/` | `MotionProvider` (reduced motion, FPS setting), `useInView`, `FpsMeter`, `MotionControls` |
 | `src/components/` | `FeaturePage`, `Demo`, `CodePeek`, `Nav`, and `ui.tsx` (`Button`, `Stage`, `cx`) |
 | `src/app/globals.css` | Tailwind import, light/dark colour tokens mapped into `@theme`, element defaults |
 | `public/rive/` | `.riv` files (see `CREDITS.md`) and the Rive runtime, copied in at build time |
 | `next.config.ts` | Cache Components, security headers, CSP |
 
-**Adding a page:** create `src/app/<slug>/page.tsx` using `FeaturePage`, then set `ready: true` in `features.ts`. Rive pages must be named `rive-*` (a test enforces it), because only those paths get WebAssembly in the CSP.
+**Adding a page:** create `src/app/<slug>/page.tsx` using `FeaturePage` and add it to `features.ts` with `ready: true` (the `[slug]` placeholder route for unbuilt pages was removed once everything was built; bring it back if you add `ready: false` entries). Wrap anything that imports Three.js or Rive in a `lazy.tsx` (`next/dynamic` with `ssr: false` inside `WhenVisible`). Rive pages must be named `rive-*` (a test enforces it), because only those paths get WebAssembly in the CSP.
 
 ## Notes
 
@@ -49,6 +48,7 @@ CI (`.github/workflows/ci.yml`) runs all four on every pull request.
 - **Three.js** runs through react-three-fiber 9 (React 19). Every scene uses `components/three/ThreeCanvas.tsx`: a no-WebGL `fallback`, and `frameloop="demand"` when motion is reduced or the canvas is off screen (children get `animate` to know whether to move things). **Models**: `useGLTF(path, false, false)` turns off Draco/Meshopt so drei never fetches decoders from Google's CDN; animations play through `useAnimations`, paused with `setEffectiveTimeScale(0)`. The Fox model is CC BY 4.0 (credited on the page and in `public/models/CREDITS.md`); DamagedHelmet was skipped because part of it is CC BY-NC. **Materials** are lit by drei `<Environment>` built from `<Lightformer>` panels, so no HDR file or CDN preset is loaded. **Shaders**: `waveMaterial.ts` defines GLSL with drei `shaderMaterial()` and registers it with `extend()`; it's imported for that side effect explicitly, because a type-only import gets dropped by the build.
 - **Hosting**: Vercel project `motion-feature-lab` (team two-seats), connected to GitHub, so every PR gets a preview and `main` deploys to production. `motion.djmiskey.com` is a DNS-only `CNAME` in Cloudflare (proxy off). `app/robots.ts` and `app/sitemap.ts` (generated from the registry) point crawlers at the custom domain.
 - **Together** (`/gsap-three`, `/rive-three`): ScrollTrigger scrubs a timeline that tweens a plain object (camera position and target); `useFrame` copies it to the camera, so scrolling causes no React re-renders, and the view stays put with CSS `sticky`. Reduced motion swaps scrolling for buttons that jump between viewpoints. Rive becomes a texture by giving its player its own canvas and wrapping it in a `<canvasTexture>`; **Rive draws nothing into a canvas with a 0 × 0 on-screen box** (detached, or `@rive-app/react-canvas`'s component with container resizing off), so that canvas is attached to `<body>` at its real size, positioned off screen. Interactive Rive UI is a normal DOM overlay (`ThreeCanvas`'s `overlay` slot) pinned to a 3D point by `components/three/Anchor.tsx`, which projects the point each frame; drei's `<Html>` rendered nothing in this stack (React 19 / Next 16 / R3F 9), so the lab doesn't use it.
+- **Performance** (`/performance`): Next.js prefetches the code of every page linked in the sidebar, and the Three.js and Rive pages imported those libraries directly, so **every page downloaded 598 KB of compressed JavaScript**, Three.js and Rive included. Each heavy demo is now its own chunk (`lazy.tsx`: `next/dynamic` with `ssr: false`, rendered by `components/Deferred.tsx`'s `WhenVisible` with a same-size `DemoPlaceholder`, so nothing shifts). Measured in headless Edge on the production build: home and GSAP pages 227 KB, Rive pages 292 KB + WASM, Three.js pages 470–540 KB. What's left everywhere is ~140 KB of Next.js/React and 79 KB of GSAP, kept eager on purpose. The page also tallies its own downloads live (`PerformanceObserver`), compares animating `transform` with `left/top`, and reports what it detects about the device.
 - **CSP**: everything loads from this site: `.riv` files, models and textures go in `public/`. `connect-src` also allows `blob:`, because the glTF loader unpacks a model's embedded textures into blob URLs and fetches them. Script-src allows `'unsafe-inline'` because the pages are prerendered (see the Vercel lab's Security page for the nonce version).
 
 ## Roadmap
@@ -58,4 +58,4 @@ CI (`.github/workflows/ci.yml`) runs all four on every pull request.
 - [x] **Phase 3: Rive.** Data binding both ways (stocks dashboard), fit/alignment and `Fit.Layout` responsive artboards
 - [x] **Phase 4: Three.js.** glTF model with animations (Fox), PBR materials with Lightformer environment lighting, a custom GLSL wave shader
 - [x] **Phase 5: Together.** Scroll-driven 3D camera (GSAP × Three.js), Rive as a live texture and Rive UI pinned in 3D (Rive × Three.js)
-- [ ] **Phase 6: Performance.** Lazy loading heavy libraries, frame budgets, no-WebGL fallbacks
+- [x] **Phase 6: Performance.** Lazy-loaded Three.js and Rive (598 KB → 227 KB of JS on most pages), live download tally, transform vs layout frame budget, device detection

@@ -1,6 +1,6 @@
 import { CodePeek } from "@/components/CodePeek";
 import { Demo, FeaturePage } from "@/components/FeaturePage";
-import { Scene } from "./Scene";
+import { Scene } from "./lazy";
 
 export default function ThreeBasicsPage() {
   return (
