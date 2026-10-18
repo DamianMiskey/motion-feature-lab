@@ -22,7 +22,7 @@
     --line: #2f2e2b;
     --fg: #ecebe7;
     --muted: #a09e97;
-    --accent: #7b6cf0;
+    --accent: #6a5ae0; /* white text on it ≥ 4.5:1, and ≥ 3:1 against the dark backgrounds */
     --accent-ink: #a89dff;
     --code: #232321;
     --danger: #ff7b6e;
@@ -49,6 +49,8 @@
 @layer base {
   body { @apply bg-bg font-sans text-[15px] leading-relaxed text-fg; }
   a { @apply text-accent-ink; }
+  /* Links inside running text need more than colour to stand out (WCAG 1.4.1). */
+  article :is(p, li) a { @apply underline underline-offset-2; }
   h1 { @apply mb-1.5 text-3xl leading-tight font-bold; }
   h2 { @apply mb-2.5 text-[1.05rem] font-bold; }
   h3 { @apply mt-5 mb-2 text-[0.95rem] font-bold; }

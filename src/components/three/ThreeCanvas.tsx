@@ -31,6 +31,9 @@ export function ThreeCanvas({
       <Canvas
         frameloop={animate ? "always" : "demand"}
         fallback={<p className="p-4 text-muted">This browser can&apos;t show WebGL, so the 3D scene is skipped.</p>}
+        // A plain <div> may not carry a label; as role="img" the scene is
+        // announced as one picture with this description.
+        role="img"
         aria-label={label}
         {...props}
       >

@@ -18,11 +18,15 @@ Production build locally: `npm run build && npm start`.
 ```bash
 npm run lint
 npm run typecheck
-npm test           # Vitest: feature registry, robots.txt and sitemap, Rive colour conversion
+npm test           # Vitest: feature registry, robots.txt and sitemap, Rive colour conversion, game levels
 npm run build
+npm run e2e        # Playwright against the build (starts `npm start` on :3100)
+BASE_URL=https://motion.djmiskey.com npm run e2e   # …or against any deployment
 ```
 
-CI (`.github/workflows/ci.yml`) runs all four on every pull request.
+CI (`.github/workflows/ci.yml`) runs all five on every pull request.
+
+**End-to-end tests** (`e2e/`, Playwright): `pages.spec` loads every page on desktop and a Pixel 7, mounts every lazy demo, and fails on any uncaught exception, console error (CSP blocks included) or sideways overflow; `headers.spec` checks the security headers and that `'wasm-unsafe-eval'` is allowed exactly where `src/lib/wasm-pages.ts` says; `a11y.spec` runs axe (WCAG 2.2 A/AA) on every page in light and dark mode; `interactions.spec` drags, throws, scrolls the wheel, presses keys and plays a game round. Locally they use the installed Microsoft Edge (`channel: "msedge"`, no browser download); CI installs Chromium and renders WebGL with SwiftShader. Two traps the suite works around: on an emulated phone the layout viewport grows to fit too-wide content, so overflow is measured against the device width, not `innerWidth`; and WebAssembly errors arrive after a demo's chunk has loaded, so `waitForDemos` waits for the network to go idle. The suite was checked by breaking things on purpose (the carousel overflow, a missing CSP entry): both fail it.
 
 ## Layout
 
@@ -65,3 +69,4 @@ CI (`.github/workflows/ci.yml`) runs all four on every pull request.
 - [x] **Phase 7: Interaction.** Draggable + Inertia (throw, carousel, dial), Observer (one gesture, one slide), MotionPath (SVG path and curves through points), pointer effects (quickTo, magnetic buttons, tilt, gsap.matchMedia), Rive keyboard focus, key/text listeners and text input with semantics
 - [x] **Phase 8: Advanced 3D.** Post-processing (bloom, depth of field, chromatic aberration, vignette, grain), instancing (50,000 cubes in one draw call vs separate meshes), Rapier physics (stacking, dropping, a kinematic pointer ball), WebGPURenderer with a TSL material
 - [x] **Phase 9: Capstone.** Tower Toppler (`/game`): a three-level physics game. Three.js + Rapier world, GSAP camera swoop, split-text menus, score count-up and pops, Rive star rating, keyboard aiming
+- [x] **Testing.** Playwright end-to-end suite in CI (144 tests: every page on desktop and phone, security headers, axe in light and dark, interactions). It found and fixed: `aria-label` on role-less elements (3D canvases, SplitText paragraphs), colour-only links, white-on-purple contrast in dark mode, the game not focusing its aiming layer, and `/gsap-scroll` overflowing phones
