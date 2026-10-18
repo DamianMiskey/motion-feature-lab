@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { WASM_PAGES } from "./src/lib/wasm-pages";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -39,9 +40,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: [...securityHeaders, { key: "Content-Security-Policy", value: policy() }] },
-      // Rive runs on WebAssembly, which needs 'wasm-unsafe-eval'. Only the
-      // Rive pages get it (their slugs start with "rive-"); the later rule wins.
-      { source: "/:slug(rive-.*)", headers: [{ key: "Content-Security-Policy", value: policy(" 'wasm-unsafe-eval'") }] },
+      // Rive and Rapier run on WebAssembly, which needs 'wasm-unsafe-eval'.
+      // Only the pages listed in src/lib/wasm-pages.ts get it; the later rule wins.
+      { source: `/:slug(${WASM_PAGES})`, headers: [{ key: "Content-Security-Policy", value: policy(" 'wasm-unsafe-eval'") }] },
     ];
   },
 };
