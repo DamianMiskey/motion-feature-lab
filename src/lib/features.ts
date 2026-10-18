@@ -1,7 +1,7 @@
 // Single source of truth for the dashboard: every technique in the lab,
 // grouped by category. `ready: false` would mark an unbuilt page (bring back
 // the src/app/[slug] placeholder route if you add one).
-export type Category = "Foundations" | "GSAP" | "Rive" | "Three.js" | "Together" | "Performance";
+export type Category = "Foundations" | "GSAP" | "Rive" | "Three.js" | "Together" | "Performance" | "Capstone";
 
 export type Feature = {
   slug: string;
@@ -68,6 +68,9 @@ export const features: Feature[] = [
 
   { slug: "performance", name: "Performance", category: "Performance", phase: 6, ready: true,
     summary: "Lazy loading, frame budgets, and fallbacks without WebGL." },
+
+  { slug: "game", name: "Tower Toppler", category: "Capstone", phase: 9, ready: true,
+    summary: "A small physics game: Three.js, Rapier, GSAP and Rive together." },
 ];
 
 export const categories = [...new Set(features.map((f) => f.category))];
