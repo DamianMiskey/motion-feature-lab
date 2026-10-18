@@ -14,9 +14,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <MotionProvider>
-          <div className="grid min-h-screen md:grid-cols-[240px_1fr]">
+          {/* minmax(0, 1fr), not auto/1fr: a column sized to its content would let
+              any too-wide demo (a sideways track, a long code line) widen the
+              whole page on a phone. */}
+          <div className="grid min-h-screen grid-cols-[minmax(0,1fr)] md:grid-cols-[240px_minmax(0,1fr)]">
             <Nav />
-            <main className="w-full max-w-250 px-[clamp(16px,4vw,3rem)] py-8">{children}</main>
+            <main className="w-full min-w-0 max-w-250 px-[clamp(16px,4vw,3rem)] py-8">{children}</main>
           </div>
           <FpsMeter />
         </MotionProvider>

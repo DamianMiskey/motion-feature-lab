@@ -136,7 +136,6 @@ export function Game() {
     gsap.killTweensOf(rigRef.current);
     if (reduced) Object.assign(rigRef.current, { x: 0, y: 3.2, z: 10 });
     else gsap.fromTo(rigRef.current, { x: -9, y: 6, z: 6 }, { x: 0, y: 3.2, z: 10, duration: 1.6, ease: "power3.inOut" });
-    root.current?.querySelector<HTMLElement>(".aim-layer")?.focus({ preventScroll: true });
   };
 
   const finish = useCallback(() => {
@@ -209,7 +208,12 @@ export function Game() {
       throwBall();
     }
   };
-  useEffect(placeReticle, [screen]);
+  // When a level starts, keyboard focus moves onto the aiming layer (it only
+  // exists once the "playing" screen has rendered), so Space throws at once.
+  useEffect(() => {
+    placeReticle();
+    if (screen === "playing") root.current?.querySelector<HTMLElement>(".aim-layer")?.focus({ preventScroll: true });
+  }, [screen, attempt]);
 
   // ---- GSAP: screens, score, ball counter ----------------------------------
 
@@ -268,7 +272,7 @@ export function Game() {
       {/* HUD */}
       <div className="absolute inset-x-0 top-0 flex flex-wrap items-center justify-between gap-2 bg-linear-to-b from-black/60 to-transparent px-4 pt-3 pb-6 text-sm">
         <span><strong>{current.name}</strong> · level {level + 1}/{LEVELS.length}</span>
-        <span className="flex items-center gap-1" aria-label={`${ballsLeft} balls left`}>
+        <span className="flex items-center gap-1" role="img" aria-label={`${ballsLeft} balls left`}>
           {Array.from({ length: current.balls }, (_, i) => (
             <span key={`${attempt}-${i}`} data-i={i} className={cx("ball-icon inline-block size-3.5 rounded-full", i < ballsLeft ? "bg-white" : "bg-white/20")} />
           ))}

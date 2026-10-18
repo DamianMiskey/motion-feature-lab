@@ -48,3 +48,9 @@ skills-lock.json
 
 # Copied from node_modules by scripts/copy-rive-wasm.mjs
 /public/rive/rive.wasm
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
