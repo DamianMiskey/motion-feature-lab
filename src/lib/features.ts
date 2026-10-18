@@ -26,6 +26,14 @@ export const features: Feature[] = [
     summary: "DrawSVG and MorphSVG: line drawing and shape morphing." },
   { slug: "gsap-flip", name: "Flip", category: "GSAP", phase: 2, ready: true,
     summary: "Smooth layout changes: reorder, filter, expand." },
+  { slug: "gsap-draggable", name: "Draggable & Inertia", category: "GSAP", phase: 7, ready: true,
+    summary: "Drag, throw and spin, landing on snap points." },
+  { slug: "gsap-observer", name: "Observer", category: "GSAP", phase: 7, ready: true,
+    summary: "One wheel, swipe or key press, one slide." },
+  { slug: "gsap-motion-path", name: "MotionPath", category: "GSAP", phase: 7, ready: true,
+    summary: "Move along SVG paths and curves through points." },
+  { slug: "gsap-pointer", name: "Pointer effects", category: "GSAP", phase: 7, ready: true,
+    summary: "Cursor trails, magnetic buttons and tilt cards." },
 
   { slug: "rive-basics", name: "Rive playback", category: "Rive", phase: 1, ready: true,
     summary: "Play .riv files, control playback, react to the pointer." },
@@ -33,6 +41,8 @@ export const features: Feature[] = [
     summary: "Drive a Rive file from your app's data, and read values back." },
   { slug: "rive-layouts", name: "Layouts & responsive", category: "Rive", phase: 3, ready: true,
     summary: "Fit, alignment and artboards that resize with the page." },
+  { slug: "rive-input", name: "Keyboard & text input", category: "Rive", phase: 7, ready: true,
+    summary: "Focus, key listeners and text fields inside a Rive file." },
 
   { slug: "three-basics", name: "A first 3D scene", category: "Three.js", phase: 1, ready: true,
     summary: "Camera, lights, meshes and orbit controls with react-three-fiber." },

@@ -8,5 +8,8 @@ Example files from Rive's own repositories, both MIT-licensed:
 | `rating.riv` | [rive-app/rive-react](https://github.com/rive-app/rive-react/blob/main/examples/public/rating.riv) | MIT |
 | `stocks.riv` | [rive-app/rive-react](https://github.com/rive-app/rive-react/blob/main/examples/public/stocks.riv) | MIT |
 | `layout_test.riv` | [rive-app/rive-react](https://github.com/rive-app/rive-react/blob/main/examples/public/layout_test.riv) | MIT |
+| `focus-tray.riv` | [rive-app/rive-react](https://github.com/rive-app/rive-react/blob/main/examples/public/focus-tray.riv) | MIT |
+| `key-and-text-listeners.riv` | [rive-app/rive-react](https://github.com/rive-app/rive-react/blob/main/examples/public/key-and-text-listeners.riv) | MIT |
+| `text_input_semantics.riv` | [rive-app/rive-react](https://github.com/rive-app/rive-react/blob/main/examples/public/text_input_semantics.riv) | MIT |
 
 `rive.wasm` (the Rive runtime) is copied from `@rive-app/canvas` (MIT) by `scripts/copy-rive-wasm.mjs` and isn't committed.
