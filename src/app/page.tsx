@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { FeatureLink } from "@/components/FeatureLink";
 import { panel } from "@/components/FeaturePage";
 import { cx } from "@/components/ui";
 import { categories, features } from "@/lib/features";
@@ -29,11 +29,11 @@ export default function Home() {
           <h2>{cat}</h2>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3">
             {features.filter((f) => f.category === cat).map((f) => (
-              <Link key={f.slug} href={`/${f.slug}`} className={cx("flex flex-col gap-1 rounded-xl border border-line bg-surface px-4 py-3.5 text-fg no-underline hover:border-accent", !f.ready && "opacity-70")}>
+              <FeatureLink key={f.slug} slug={f.slug} className={cx("flex flex-col gap-1 rounded-xl border border-line bg-surface px-4 py-3.5 text-fg no-underline hover:border-accent", !f.ready && "opacity-70")}>
                 <span className="font-semibold">{f.name}</span>
                 <span className="text-sm text-muted">{f.summary}</span>
                 <span className={cx("self-start rounded-full px-2 py-px text-xs", f.ready ? "bg-accent text-white" : "bg-code text-muted")}>{f.ready ? "Live" : `Phase ${f.phase}`}</span>
-              </Link>
+              </FeatureLink>
             ))}
           </div>
         </section>

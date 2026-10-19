@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { categories, features } from "@/lib/features";
+import { FeatureLink } from "./FeatureLink";
 import { cx } from "./ui";
 import { MotionControls } from "./motion/MotionControls";
 
@@ -23,16 +24,16 @@ export function Nav() {
           {features.filter((f) => f.category === cat).map((f) => {
             const active = path === `/${f.slug}`;
             return (
-              <Link
+              <FeatureLink
                 key={f.slug}
-                href={`/${f.slug}`}
+                slug={f.slug}
                 className={cx(
                   "block rounded-md border border-line px-2 py-1 text-sm no-underline md:border-0 md:text-[15px]",
                   active ? "bg-accent text-white" : f.ready ? "text-fg hover:bg-code" : "text-muted hover:bg-code",
                 )}
               >
                 {f.name}
-              </Link>
+              </FeatureLink>
             );
           })}
         </div>
