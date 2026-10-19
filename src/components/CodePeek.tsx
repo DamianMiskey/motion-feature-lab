@@ -24,7 +24,7 @@ export async function CodePeek({ file }: { file: string }) {
       <summary className="inline-block cursor-pointer list-none rounded-md border border-line px-3.5 py-1.5 font-medium text-accent-ink group-open:mb-1 [&::-webkit-details-marker]:hidden">
         Show code · <code>src/{file}</code>
       </summary>
-      <pre className="mt-3 max-h-120 overflow-x-auto rounded-lg bg-code px-4 py-3.5 font-mono text-[12.5px] leading-normal">{source}</pre>
+      <pre tabIndex={0} className="mt-3 max-h-120 overflow-x-auto rounded-lg bg-code px-4 py-3.5 font-mono text-[12.5px] leading-normal">{source}</pre>
     </details>
   );
 }
