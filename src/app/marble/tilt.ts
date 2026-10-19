@@ -13,13 +13,54 @@ const clamp = (v: number) => Math.max(-1, Math.min(1, v));
 const DRAG_RANGE = 110; // px of drag for a full tilt
 const DEVICE_RANGE = 22; // degrees of phone tilt for a full tilt
 
+// ---- Phone tilt maths (pure, so it's unit-tested) ---------------------------
+
+type Vec = [number, number, number];
+const dot = (a: Vec, b: Vec) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const unit = (v: Vec): Vec => { const l = Math.hypot(...v) || 1; return [v[0] / l, v[1] / l, v[2] / l]; };
+const rad = (deg: number) => (deg * Math.PI) / 180;
+
+/**
+ * Which way is "up", in screen coordinates (x right, y up the screen, z out
+ * of it), from a deviceorientation reading. beta and gamma are Euler angles,
+ * and Euler angles misbehave when the phone is held in landscape: gamma runs
+ * into its ±90° limit and beta flips. The up direction they describe doesn't:
+ * it's smooth however the phone is held. Then the screen's own rotation
+ * (screen.orientation.angle) turns device axes into screen axes.
+ */
+export function upOnScreen(beta: number, gamma: number, screenAngle: number): Vec {
+  const b = rad(beta), g = rad(gamma), a = rad(screenAngle);
+  // World "up" seen from the device: the rotation is Z(alpha)·X(beta)·Y(gamma),
+  // and alpha (compass heading) drops out.
+  const ux = -Math.sin(g) * Math.cos(b), uy = Math.sin(b), uz = Math.cos(g) * Math.cos(b);
+  // Rotated a degrees anticlockwise, screen-right is the device axis rotated by -a.
+  return [ux * Math.cos(a) - uy * Math.sin(a), ux * Math.sin(a) + uy * Math.cos(a), uz];
+}
+
+/**
+ * Tilt relative to a neutral pose (how the phone was held at "Play"): the
+ * screen's right and up directions are flattened onto the neutral "level",
+ * and the current up direction is measured along them. Same sensitivity
+ * whether the phone is held flat or steeply.
+ */
+export function tiltFrom(up: Vec, neutral: Vec, rangeDeg = DEVICE_RANGE): Tilt {
+  const n = unit(neutral);
+  const along = (axis: Vec) => unit([axis[0] - dot(axis, n) * n[0], axis[1] - dot(axis, n) * n[1], axis[2] - dot(axis, n) * n[2]]);
+  const right = along([1, 0, 0]);
+  const upScreen = along([0, 1, 0]);
+  const scale = Math.sin(rad(rangeDeg));
+  // Right side down: "up" leans towards the screen's left. Far edge down: it
+  // leans towards the bottom of the screen.
+  return { x: clamp(-dot(up, right) / scale), y: clamp(-dot(up, upScreen) / scale) };
+}
+
 type OrientationEventWithPermission = typeof DeviceOrientationEvent & { requestPermission?: () => Promise<"granted" | "denied"> };
 
 export function useTilt(layer: RefObject<HTMLElement | null>, active: boolean) {
   const target = useRef<Tilt>({ x: 0, y: 0 });
   const keys = useRef(new Set<string>());
   const drag = useRef<{ x0: number; y0: number; tilt: Tilt } | null>(null);
-  const device = useRef<{ neutral: { beta: number; gamma: number } | null; tilt: Tilt } | null>(null);
+  const device = useRef<{ neutral: Vec | null; tilt: Tilt } | null>(null);
   const [deviceOn, setDeviceOn] = useState(false);
 
   const update = useCallback(() => {
@@ -72,26 +113,29 @@ export function useTilt(layer: RefObject<HTMLElement | null>, active: boolean) {
     };
   }, [layer, active, update]);
 
-  // Phone tilt. beta is front-to-back and gamma left-to-right, relative to
-  // the screen's natural orientation, so in landscape the two swap. The first
-  // reading becomes "level", so the phone can be held at any comfortable angle.
+  // Phone tilt. The first reading becomes "level", so the phone can be held at
+  // any comfortable angle; turning the phone (portrait ↔ landscape) starts
+  // a new "level", since the old one no longer means anything.
   useEffect(() => {
     if (!deviceOn) return;
     device.current = { neutral: null, tilt: { x: 0, y: 0 } };
+    const screenAngle = () => screen.orientation?.angle ?? Number((window as { orientation?: number }).orientation ?? 0);
     const onOrientation = (e: DeviceOrientationEvent) => {
       if (e.beta == null || e.gamma == null || !device.current) return;
       const d = device.current;
-      d.neutral ??= { beta: e.beta, gamma: e.gamma };
-      const db = e.beta - d.neutral.beta;
-      const dg = e.gamma - d.neutral.gamma;
-      const angle = screen.orientation?.angle ?? 0;
-      const [x, y] = angle === 90 ? [db, dg] : angle === 270 || angle === -90 ? [-db, -dg] : angle === 180 ? [-dg, db] : [dg, -db];
-      d.tilt = { x: clamp(x / DEVICE_RANGE), y: clamp(y / DEVICE_RANGE) };
+      const up = upOnScreen(e.beta, e.gamma, screenAngle());
+      d.neutral ??= up;
+      d.tilt = tiltFrom(up, d.neutral);
       update();
     };
+    const onRotate = () => { if (device.current) device.current.neutral = null; };
     window.addEventListener("deviceorientation", onOrientation);
+    screen.orientation?.addEventListener("change", onRotate);
+    window.addEventListener("orientationchange", onRotate);
     return () => {
       window.removeEventListener("deviceorientation", onOrientation);
+      screen.orientation?.removeEventListener("change", onRotate);
+      window.removeEventListener("orientationchange", onRotate);
       device.current = null;
       update();
     };
