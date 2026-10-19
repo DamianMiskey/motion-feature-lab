@@ -73,6 +73,8 @@ export const features: Feature[] = [
     summary: "A small physics game: Three.js, Rapier, GSAP and Rive together." },
   { slug: "marble", name: "Marble Maze", category: "Capstone", phase: 10, ready: true,
     summary: "Tilt the board, or your phone, to roll a marble through three mazes." },
+  { slug: "stacker", name: "Stacker", category: "Capstone", phase: 11, ready: true,
+    summary: "A one-button tower game: drop each slab exactly on the last." },
 ];
 
 export const categories = [...new Set(features.map((f) => f.category))];
