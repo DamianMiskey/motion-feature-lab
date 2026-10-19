@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { PAGES, scrollThrough, waitForDemos, waitForStillness } from "./helpers";
 
 // Automated accessibility checks (axe-core, WCAG 2.2 A and AA rules) on every

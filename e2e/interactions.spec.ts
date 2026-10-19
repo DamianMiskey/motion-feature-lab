@@ -1,4 +1,5 @@
-import { expect, type Page, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { scrollThrough, waitForDemos } from "./helpers";
 
 // The behaviour the demos promise, driven the way a visitor would: mouse,

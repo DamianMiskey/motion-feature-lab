@@ -5,6 +5,7 @@ import { PerspectiveCamera } from "three";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type RefObject } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { ThreeCanvas } from "@/components/three/ThreeCanvas";
+import { Leaderboard } from "@/components/Leaderboard";
 import { Button, cx } from "@/components/ui";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import type { Aim, Ball } from "./GameWorld";
@@ -287,8 +288,8 @@ export function Game() {
       {!ready && <Loader />}
 
       {ready && screen !== "playing" && (
-        <div className="pointer-events-auto absolute inset-0 grid place-items-center bg-black/35 p-4">
-          <div className="panel w-full max-w-sm rounded-2xl border border-white/15 bg-[#17161f]/95 p-6 text-center shadow-2xl">
+        <div className="pointer-events-auto absolute inset-0 flex overflow-y-auto bg-black/35 p-4">
+          <div className="panel m-auto w-full max-w-sm rounded-2xl border border-white/15 bg-[#17161f]/95 p-6 text-center shadow-2xl">
             {screen === "intro" && (
               <>
                 <h3 className="panel-title mt-0 mb-2 overflow-hidden text-3xl font-bold">Tower Toppler</h3>
@@ -313,6 +314,7 @@ export function Game() {
                     <Button onClick={() => startLevel(0, false)}>Play again</Button>
                   )}
                 </div>
+                {screen === "finished" && <Leaderboard game="toppler" value={banked} />}
               </>
             )}
           </div>

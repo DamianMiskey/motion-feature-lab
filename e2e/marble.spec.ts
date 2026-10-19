@@ -1,4 +1,5 @@
-import { expect, type Page, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { LEVELS, shortestPath, toBoard } from "@/app/marble/levels";
 
 // Marble Maze, played by an autopilot: the same breadth-first search the unit
