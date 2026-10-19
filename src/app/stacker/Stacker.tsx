@@ -68,15 +68,23 @@ export function Stacker() {
   const dropNow = () => {
     const g = live.current;
     if (!g.running) return;
-    const result = drop(g.top, g.moving, g.axis);
-    const hue = hueAt(g.level);
+    // Copy what this drop needs out of the live game first. State updaters
+    // run later, after the lines below have moved g on to the next slab: an
+    // updater that read g.level would put the slab one level too high, inside
+    // the next sliding slab (which looked like slabs passing through each
+    // other, with flickering faces).
+    const level = g.level;
+    const moving = { ...g.moving };
+    const result = drop(g.top, moving, g.axis);
+    const hue = hueAt(level);
     if (result.kind === "miss") {
       // The whole slab falls, and that's the game.
       g.running = false;
       // The whole slab falls, away from the tower in the direction it was sliding.
-      const away = Math.sign((g.axis === "x" ? g.moving.x - g.top.x : g.moving.z - g.top.z) || 1);
-      setChunks((c) => [...c, { ...g.moving, id: ids.current++, level: g.level, hue, out: g.axis === "x" ? { x: away, z: 0 } : { x: 0, z: away } }]);
-      const height = g.level - 1;
+      const away = Math.sign((g.axis === "x" ? moving.x - g.top.x : moving.z - g.top.z) || 1);
+      const fallen: Chunk = { ...moving, id: ids.current++, level, hue, out: g.axis === "x" ? { x: away, z: 0 } : { x: 0, z: away } };
+      setChunks((c) => [...c, fallen]);
+      const height = level - 1;
       if (height > readBest()) { writeBest(height); setNewBest(true); }
       setBest(Math.max(height, readBest()));
       setScreen("over");
@@ -86,16 +94,18 @@ export function Stacker() {
     if (result.kind === "perfect") {
       streak.current += 1;
       if (streak.current >= STREAK_TO_GROW) slab = grow(grow(slab, "x"), "z");
-      setFlash({ id: ids.current++, slab, level: g.level });
+      setFlash({ id: ids.current++, slab, level });
       pop(streak.current > 1 ? `Perfect ×${streak.current}` : "Perfect!");
     } else {
       streak.current = 0;
       const away = Math.sign(g.axis === "x" ? result.chunk.x - result.placed.x : result.chunk.z - result.placed.z);
       const out = g.axis === "x" ? { x: away, z: 0 } : { x: 0, z: away };
-      setChunks((c) => [...c, { ...result.chunk, id: ids.current++, level: g.level, hue, out }]);
+      const piece: Chunk = { ...result.chunk, id: ids.current++, level, hue, out };
+      setChunks((c) => [...c, piece]);
     }
-    setPlaced((p) => [...p, { ...slab, id: ids.current++, level: g.level, hue }]);
-    setScore(g.level);
+    const landed: Placed = { ...slab, id: ids.current++, level, hue };
+    setPlaced((p) => [...p, landed]);
+    setScore(level);
     // Next slab: same size as the one just placed, along the other axis,
     // starting from the far end.
     const axis: Axis = g.axis === "x" ? "z" : "x";
@@ -161,7 +171,9 @@ export function Stacker() {
   );
 
   return (
-    <div ref={root}>
+    // data-top: the level of the highest placed slab, which must always equal
+    // the score (a regression check for the bug described in dropNow).
+    <div ref={root} data-top={placed.at(-1)?.level}>
       <ThreeCanvas orthographic camera={{ zoom: 50, position: [9, 9, 9], near: -50, far: 200 }} className="h-[480px] sm:h-[560px]" label={`Stacker: a tower ${score} slabs high`} overlay={overlay}>
         {() => (
           <StackerScene live={live} step={step} placed={placed} chunks={chunks} flash={flash} hue={hue} reduced={reduced} onChunkDone={onChunkDone} />
