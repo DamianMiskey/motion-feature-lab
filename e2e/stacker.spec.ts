@@ -1,4 +1,5 @@
-import { expect, type Page, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 // Stacker, played by an autopilot: it watches how far the sliding slab is
 // from a perfect drop (mirrored on the page as data-offset) and presses Space

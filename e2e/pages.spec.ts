@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { overflow, PAGES, scrollThrough, waitForDemos, watchErrors } from "./helpers";
 
 // Every page, on desktop and on a phone: it loads, every lazy demo mounts,

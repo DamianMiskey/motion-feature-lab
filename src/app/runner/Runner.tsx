@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { ThreeCanvas } from "@/components/three/ThreeCanvas";
+import { Leaderboard } from "@/components/Leaderboard";
 import { Button } from "@/components/ui";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { useTilt } from "../marble/tilt";
@@ -175,8 +176,8 @@ export function Runner() {
         </button>
       )}
       {screen !== "playing" && (
-        <div className="pointer-events-auto absolute inset-0 grid place-items-center bg-black/35 p-4">
-          <div className="panel w-full max-w-xs rounded-2xl border border-white/15 bg-[#17161f]/95 p-6 text-center shadow-2xl">
+        <div className="pointer-events-auto absolute inset-0 flex overflow-y-auto bg-black/35 p-4">
+          <div className="panel m-auto w-full max-w-xs rounded-2xl border border-white/15 bg-[#17161f]/95 p-6 text-center shadow-2xl">
             <h3 className="panel-title mt-0 mb-2 overflow-hidden text-3xl font-bold">{screen === "intro" ? "Starfield Runner" : `Score ${final.score}`}</h3>
             <p className="text-sm text-white/80">
               {screen === "intro"
@@ -184,6 +185,7 @@ export function Runner() {
                 : final.newBest ? "A new best!" : `Best: ${final.best}`}
             </p>
             <Button className="mt-2" onClick={start}>{screen === "intro" ? "Launch" : "Fly again"}</Button>
+            {screen === "over" && <Leaderboard game="runner" value={final.score} />}
           </div>
         </div>
       )}

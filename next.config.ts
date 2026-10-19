@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { WASM_PAGES } from "./src/lib/wasm-pages";
 
 const isDev = process.env.NODE_ENV === "development";
+const scoresOrigin = new URL(process.env.NEXT_PUBLIC_SCORES_API ?? "https://api.djmiskey.com").origin;
 
 // Content Security Policy. Everything loads from this site: Rive's runtime,
 // .riv files, 3D models and textures are all served from public/.
@@ -15,7 +16,8 @@ const policy = (extraScript = "") => [
   "font-src 'self'",
   // blob: is for 3D models: the glTF loader unpacks embedded textures into
   // blob: URLs created by the page itself, then fetches them.
-  "connect-src 'self' blob:",
+  // The games' leaderboards (the API lab), over fetch and EventSource.
+  `connect-src 'self' blob: ${scoresOrigin}`,
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
