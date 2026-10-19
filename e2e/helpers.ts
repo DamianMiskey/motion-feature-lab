@@ -20,6 +20,27 @@ export function watchErrors(page: Page) {
   return errors;
 }
 
+/**
+ * Waits for fades to finish before an accessibility scan. GSAP animates
+ * opacity with inline styles, and an element caught half-transparent makes
+ * axe report false contrast failures (its colours are blended with what's
+ * behind it). On a slow machine those fades run much longer than their
+ * nominal duration (GSAP's lag smoothing). "Settled" means the inline
+ * opacities stopped changing; some pages animate opacity on purpose and
+ * never settle, so after 6 s the scan goes ahead anyway.
+ */
+export async function waitForStillness(page: Page) {
+  const snapshot = () => page.evaluate(() => [...document.querySelectorAll<HTMLElement>("[style*=opacity]")].map((el) => el.style.opacity).join(","));
+  const deadline = Date.now() + 6_000;
+  let last = await snapshot();
+  while (Date.now() < deadline) {
+    await page.waitForTimeout(300);
+    const now = await snapshot();
+    if (now === last) return;
+    last = now;
+  }
+}
+
 /** Scrolls to the bottom in steps, so every lazy demo (WhenVisible) mounts. */
 export async function scrollThrough(page: Page) {
   await page.evaluate(async () => {

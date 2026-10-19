@@ -17,7 +17,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: CI,
   retries: CI ? 1 : 0,
-  workers: CI ? 2 : undefined,
+  // One at a time on CI: the runners have 2 cores and render WebGL in
+  // software, and two 3D pages at once starve each other until frames take
+  // over half a second (when GSAP's lag smoothing slows every animation).
+  workers: CI ? 1 : undefined,
   // Software WebGL in headless browsers is slow; 3D pages need the time.
   timeout: 60_000,
   expect: { timeout: 15_000 },
