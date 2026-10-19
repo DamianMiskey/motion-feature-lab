@@ -18,7 +18,9 @@ async function dropWhen(page: Page, ok: (o: number) => boolean) {
   // drawn it, the page still shows the last slab's offset, so wait for the
   // fresh one before lining up.
   await expect.poll(async () => Math.abs(await offset(page)), { timeout: 5_000 }).toBeGreaterThan(2);
-  for (let i = 0; i < 400; i++) {
+  // Up to 30 s: on a slow machine the slab can jump past the window, so give
+  // it several more passes back and forth.
+  for (const end = Date.now() + 30_000; Date.now() < end;) {
     if (ok(await offset(page))) { await page.keyboard.press("Space"); return; }
     await page.waitForTimeout(5);
   }

@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { PAGES, scrollThrough, waitForDemos } from "./helpers";
+import { PAGES, scrollThrough, waitForDemos, waitForStillness } from "./helpers";
 
 // Automated accessibility checks (axe-core, WCAG 2.2 A and AA rules) on every
 // page with its demos mounted. Automated tools catch roughly a third of real
@@ -15,6 +15,7 @@ for (const colorScheme of ["light", "dark"] as const) {
         await page.goto(path);
         await scrollThrough(page);
         await waitForDemos(page);
+        await waitForStillness(page);
         const { violations } = await new AxeBuilder({ page })
           .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
           .analyze();

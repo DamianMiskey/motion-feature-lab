@@ -16,7 +16,10 @@ async function startLevel1(page: Page) {
   await page.locator("article section").nth(2).scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "Play" }).click({ timeout: 45_000 });
   await expect(page.getByRole("application")).toBeFocused();
-  await page.waitForTimeout(3300); // 3, 2, 1, Go
+  // Wait for "Go" rather than a fixed time: on a slow machine (CI renders 3D
+  // in software) GSAP's lag smoothing stretches the countdown far beyond its
+  // nominal 3.6 s, and the marble can't move until it's over.
+  await expect(page.locator("[data-state]")).toHaveAttribute("data-state", "playing", { timeout: 90_000 });
 }
 
 test("the arrow keys tilt the board: right rolls the marble right", async ({ page }) => {
