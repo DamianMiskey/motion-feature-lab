@@ -21,10 +21,23 @@ export type Live = {
 };
 
 const STARS = 1400;
+// Scenery: rocks far out to the sides, above and below, that can't be hit but
+// fill the view. Without them the corridor's rocks bunch into a ball in the
+// middle distance.
+const OUTER = 140;
 const BG = "#05040d";
 
 export function RunnerScene({ live, step }: { live: RefObject<Live>; step: (dt: number) => void }) {
   const rocks = useRef<InstancedMesh>(null);
+  const outer = useRef<InstancedMesh>(null);
+  // Outer rocks: placed by a fixed hash (no randomness during render), kept
+  // outside the corridor, recycled like the real ones.
+  const outerRocks = useRef(Array.from({ length: OUTER }, (_, i) => {
+    const h = (n: number) => ((Math.sin(i * 91.17 + n * 47.3) * 43758.5453) % 1 + 1) % 1;
+    const angle = h(1) * Math.PI * 2;
+    const radius = 10 + h(2) * 28;
+    return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius * 0.6, z: -h(3) * FAR, r: 0.6 + h(4) * 2.2 };
+  }));
   const ship = useRef<Group>(null);
   const flame = useRef<Group>(null);
   // Scratch objects and star positions belong to the scene: kept in refs.
@@ -62,6 +75,20 @@ export function RunnerScene({ live, step }: { live: RefObject<Live>; step: (dt: 
       });
       m.instanceMatrix.needsUpdate = true;
     }
+    const om = outer.current;
+    if (om) {
+      const o = scratch.current;
+      outerRocks.current.forEach((r, i) => {
+        r.z += g.speed * d;
+        if (r.z > 8) r.z -= FAR;
+        o.position.set(r.x, r.y, r.z);
+        o.scale.setScalar(r.r);
+        o.rotation.set(i * 0.7 + clock.elapsedTime * 0.2, i, 0);
+        o.updateMatrix();
+        om.setMatrixAt(i, o.matrix);
+      });
+      om.instanceMatrix.needsUpdate = true;
+    }
 
     // Stars stream past faster than the rocks, wrapping round when behind us.
     const pos = stars.current?.geometry.getAttribute("position") as BufferAttribute | undefined;
@@ -77,7 +104,7 @@ export function RunnerScene({ live, step }: { live: RefObject<Live>; step: (dt: 
     // The ship banks into turns; its engine flame grows when boosting.
     if (ship.current) {
       ship.current.position.set(g.ship.x, g.ship.y, 0);
-      ship.current.rotation.set(g.vel.y * 0.05, 0, -g.vel.x * 0.07);
+      ship.current.rotation.set(g.vel.y * 0.03, 0, -g.vel.x * 0.035);
     }
     if (flame.current) flame.current.scale.set(1, 1, (g.boosting ? 2.2 : 1) * (0.85 + Math.sin(clock.elapsedTime * 40) * 0.15));
 
@@ -111,16 +138,27 @@ export function RunnerScene({ live, step }: { live: RefObject<Live>; step: (dt: 
         <meshStandardMaterial color="#8a8296" roughness={0.9} flatShading />
       </instancedMesh>
 
-      <group ref={ship}>
-        {/* A small dart: a cone for the body, a flat box for the wings. */}
+      <instancedMesh ref={outer} args={[undefined, undefined, OUTER]} frustumCulled={false}>
+        <icosahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial color="#5d5868" roughness={1} flatShading />
+      </instancedMesh>
+
+      <group ref={ship} scale={1.15}>
+        {/* A small dart: a cone for the body, swept wings, two tail fins. */}
         <mesh rotation-x={-Math.PI / 2}>
-          <coneGeometry args={[0.32, 1.3, 6]} />
+          <coneGeometry args={[0.3, 1.4, 6]} />
           <meshStandardMaterial color="#e8e6ff" metalness={0.6} roughness={0.3} />
         </mesh>
-        <mesh position={[0, -0.05, 0.25]}>
-          <boxGeometry args={[1.4, 0.06, 0.45]} />
+        <mesh position={[0, -0.04, 0.3]}>
+          <boxGeometry args={[1.5, 0.06, 0.5]} />
           <meshStandardMaterial color="#6a5ae0" metalness={0.4} roughness={0.4} />
         </mesh>
+        {[-0.45, 0.45].map((x) => (
+          <mesh key={x} position={[x, 0.16, 0.45]}>
+            <boxGeometry args={[0.05, 0.34, 0.36]} />
+            <meshStandardMaterial color="#e0577a" metalness={0.3} roughness={0.5} />
+          </mesh>
+        ))}
         <group ref={flame} position={[0, 0, 0.7]}>
           <mesh position={[0, 0, 0.25]} rotation-x={Math.PI / 2}>
             <coneGeometry args={[0.18, 0.6, 12]} />
