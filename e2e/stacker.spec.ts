@@ -32,6 +32,9 @@ test("perfect drops build the tower and score Perfects", async ({ page }) => {
   for (let n = 1; n <= 5; n++) {
     await dropWhen(page, (o) => Math.abs(o) < 0.05);
     await expect(page.getByLabel(`Height ${n}`)).toBeVisible();
+    // Each placed slab sits on its own level: the top one is level n, not n+1
+    // (which put it inside the next sliding slab).
+    await expect(page.locator("[data-top]")).toHaveAttribute("data-top", String(n));
   }
   await expect(page.locator(".pop")).toContainText("Perfect");
 });
