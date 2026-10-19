@@ -73,7 +73,9 @@ export function Stacker() {
     if (result.kind === "miss") {
       // The whole slab falls, and that's the game.
       g.running = false;
-      setChunks((c) => [...c, { ...g.moving, id: ids.current++, level: g.level, hue }]);
+      // The whole slab falls, away from the tower in the direction it was sliding.
+      const away = Math.sign((g.axis === "x" ? g.moving.x - g.top.x : g.moving.z - g.top.z) || 1);
+      setChunks((c) => [...c, { ...g.moving, id: ids.current++, level: g.level, hue, out: g.axis === "x" ? { x: away, z: 0 } : { x: 0, z: away } }]);
       const height = g.level - 1;
       if (height > readBest()) { writeBest(height); setNewBest(true); }
       setBest(Math.max(height, readBest()));
@@ -88,7 +90,9 @@ export function Stacker() {
       pop(streak.current > 1 ? `Perfect ×${streak.current}` : "Perfect!");
     } else {
       streak.current = 0;
-      setChunks((c) => [...c, { ...result.chunk, id: ids.current++, level: g.level, hue }]);
+      const away = Math.sign(g.axis === "x" ? result.chunk.x - result.placed.x : result.chunk.z - result.placed.z);
+      const out = g.axis === "x" ? { x: away, z: 0 } : { x: 0, z: away };
+      setChunks((c) => [...c, { ...result.chunk, id: ids.current++, level: g.level, hue, out }]);
     }
     setPlaced((p) => [...p, { ...slab, id: ids.current++, level: g.level, hue }]);
     setScore(g.level);

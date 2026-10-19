@@ -7,7 +7,8 @@ import { gsap } from "@/lib/gsap";
 import { type Axis, HEIGHT, type Slab } from "./stack";
 
 export type Placed = Slab & { id: number; level: number; hue: number };
-export type Chunk = Slab & { id: number; level: number; hue: number };
+/** A falling piece; `out` is the direction away from the tower (x or z, ±1). */
+export type Chunk = Slab & { id: number; level: number; hue: number; out: { x: number; z: number } };
 /** The live game, mutated every frame: refs, not React state, so no re-renders. */
 export type Live = { top: Slab; moving: Slab; axis: Axis; t: number; level: number; running: boolean; cameraY: number };
 
@@ -23,29 +24,35 @@ function SlabMesh({ slab, level, hue }: { slab: Slab; level: number; hue: number
   );
 }
 
-// An overhang that was cut off: it tumbles and falls out of view, then
-// removes itself. Simple falling motion, no physics engine.
+// An overhang that was cut off. It falls the way a real one would: pushed a
+// little away from the tower, tipping over the cut edge as it drops. (Spinning
+// it about its own centre made half of it swing into the slab it was cut
+// from, and it started flush against that slab's face, which flickered.)
 function Falling({ chunk, reduced, onDone }: { chunk: Chunk; reduced: boolean; onDone: (id: number) => void }) {
   const mesh = useRef<Mesh>(null);
-  // A spin that varies from chunk to chunk but is fixed for each (no
-  // randomness during render).
-  const v = useRef({ y: 0, spin: (((chunk.id * 7919) % 97) / 97 - 0.5) * 4, age: 0 });
+  const v = useRef({ y: 0, age: 0 });
   useFrame((_, dt) => {
     const m = mesh.current;
     if (!m) return;
-    v.current.age += dt;
+    const s = v.current;
+    s.age += dt;
     if (reduced) {
-      if (v.current.age > 0.3) onDone(chunk.id);
+      if (s.age > 0.3) onDone(chunk.id);
       return;
     }
-    v.current.y -= 18 * dt;
-    m.position.y += v.current.y * dt;
-    m.rotation.x += v.current.spin * dt;
-    m.rotation.z += v.current.spin * 0.6 * dt;
-    if (v.current.age > 2.5) onDone(chunk.id);
+    s.y -= 18 * dt;
+    m.position.y += s.y * dt;
+    m.position.x += chunk.out.x * 2.5 * dt;
+    m.position.z += chunk.out.z * 2.5 * dt;
+    // Tip outward over the cut edge: about z when moving along x, about x along z.
+    const tip = 3.2 * dt;
+    m.rotation.z -= chunk.out.x * tip;
+    m.rotation.x += chunk.out.z * tip;
+    if (s.age > 2.5) onDone(chunk.id);
   });
   return (
-    <mesh ref={mesh} position={[chunk.x, chunk.level * HEIGHT + HEIGHT / 2, chunk.z]}>
+    // Starts a hair outside the slab it came from, so no faces coincide.
+    <mesh ref={mesh} position={[chunk.x + chunk.out.x * 0.02, chunk.level * HEIGHT + HEIGHT / 2, chunk.z + chunk.out.z * 0.02]}>
       <boxGeometry args={[chunk.w, HEIGHT, chunk.d]} />
       <meshLambertMaterial color={colour(chunk.hue)} />
     </mesh>
