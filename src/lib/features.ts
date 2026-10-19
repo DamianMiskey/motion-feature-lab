@@ -75,6 +75,8 @@ export const features: Feature[] = [
     summary: "Tilt the board, or your phone, to roll a marble through three mazes." },
   { slug: "stacker", name: "Stacker", category: "Capstone", phase: 11, ready: true,
     summary: "A one-button tower game: drop each slab exactly on the last." },
+  { slug: "runner", name: "Starfield Runner", category: "Capstone", phase: 12, ready: true,
+    summary: "Dodge asteroids in an endless field that keeps speeding up." },
 ];
 
 export const categories = [...new Set(features.map((f) => f.category))];
