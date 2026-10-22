@@ -4,6 +4,7 @@ import { Environment, Lightformer } from "@react-three/drei";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { ThreeCanvas } from "@/components/three/ThreeCanvas";
+import { TiltControls } from "@/components/three/TiltControls";
 import { Leaderboard } from "@/components/Leaderboard";
 import { Button } from "@/components/ui";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
@@ -209,7 +210,7 @@ export function Marble() {
     // data-state lets tests wait for the countdown to finish, however slowly
     // the machine renders, instead of guessing how long it takes.
     <div ref={root} data-state={screen}>
-      <ThreeCanvas shadows camera={{ position: [0, 12, 7], fov: 45 }} className="h-[440px] sm:h-[540px]" label={`Marble Maze, level ${level + 1}: ${current.name}. A wooden maze seen from above, with a steel marble`} overlay={overlay}>
+      <ThreeCanvas fullscreen shadows camera={{ position: [0, 12, 7], fov: 45 }} className="h-[440px] sm:h-[540px]" label={`Marble Maze, level ${level + 1}: ${current.name}. A wooden maze seen from above, with a steel marble`} overlay={<>{overlay}<TiltControls available={canTilt} on={tilt.deviceOn} enableLabel="Tilt to play" onEnable={useDeviceTilt} onRecalibrate={tilt.recalibrate} onDisable={tilt.disableDevice} /></>}>
         {(animate) => (
           <>
             <color attach="background" args={["#14121c"]} />
@@ -229,10 +230,7 @@ export function Marble() {
         )}
       </ThreeCanvas>
       <div className="mb-2 flex flex-wrap items-center gap-2">
-        {canTilt && (tilt.deviceOn
-          ? <><Button variant="ghost" onClick={tilt.recalibrate}>Recalibrate level</Button><Button variant="ghost" onClick={tilt.disableDevice}>Stop using tilt</Button></>
-          : <Button onClick={useDeviceTilt}>Tilt your phone to play</Button>)}
-        <span className="text-sm text-muted">Keyboard: Tab into the board, then arrow keys or WASD. Mouse or touch: drag on the board like a joystick.</span>
+        <span className="text-sm text-muted">Keyboard: Tab into the board, then arrow keys or WASD. Mouse or touch: drag on the board like a joystick, or tap &quot;Tilt to play&quot; in the game.</span>
       </div>
       {reduced && <p className="text-sm text-muted">Reduced motion: menus fade instead of moving and the countdown is short; the marble itself still rolls, since that&apos;s the game.</p>}
     </div>

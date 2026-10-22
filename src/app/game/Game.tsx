@@ -325,7 +325,7 @@ export function Game() {
 
   return (
     <div ref={root}>
-      <ThreeCanvas shadows camera={{ position: [0, 3.2, 10], fov: 45 }} className="h-[420px] sm:h-[520px]" label="Tower Toppler: a 3D game where you throw balls to knock blocks off a floating platform" overlay={overlay}>
+      <ThreeCanvas fullscreen shadows camera={{ position: [0, 3.2, 10], fov: 45 }} className="h-[420px] sm:h-[520px]" label="Tower Toppler: a 3D game where you throw balls to knock blocks off a floating platform" overlay={overlay}>
         {() => (
           <>
             <color attach="background" args={["#0d0c14"]} />
