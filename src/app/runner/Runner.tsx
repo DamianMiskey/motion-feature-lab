@@ -194,7 +194,7 @@ export function Runner() {
 
   return (
     <div ref={root}>
-      <ThreeCanvas camera={{ position: [0, 1.5, 6.5], fov: 68, near: 0.1, far: FAR * 1.5 }} className="h-[480px] sm:h-[560px]" label="Starfield Runner: a small ship flying through an asteroid field" overlay={overlay}>
+      <ThreeCanvas fullscreen camera={{ position: [0, 1.5, 6.5], fov: 68, near: 0.1, far: FAR * 1.5 }} className="h-[480px] sm:h-[560px]" label="Starfield Runner: a small ship flying through an asteroid field" overlay={overlay}>
         {() => <RunnerScene live={live} step={step} />}
       </ThreeCanvas>
       <div className="mb-2 flex flex-wrap items-center gap-2">

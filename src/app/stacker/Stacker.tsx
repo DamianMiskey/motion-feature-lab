@@ -176,7 +176,7 @@ export function Stacker() {
     // data-top: the level of the highest placed slab, which must always equal
     // the score (a regression check for the bug described in dropNow).
     <div ref={root} data-top={placed.at(-1)?.level}>
-      <ThreeCanvas orthographic camera={{ zoom: 50, position: [9, 9, 9], near: -50, far: 200 }} className="h-[480px] sm:h-[560px]" label={`Stacker: a tower ${score} slabs high`} overlay={overlay}>
+      <ThreeCanvas fullscreen orthographic camera={{ zoom: 50, position: [9, 9, 9], near: -50, far: 200 }} className="h-[480px] sm:h-[560px]" label={`Stacker: a tower ${score} slabs high`} overlay={overlay}>
         {() => (
           <StackerScene live={live} step={step} placed={placed} chunks={chunks} flash={flash} hue={hue} reduced={reduced} onChunkDone={onChunkDone} />
         )}

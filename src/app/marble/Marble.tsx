@@ -209,7 +209,7 @@ export function Marble() {
     // data-state lets tests wait for the countdown to finish, however slowly
     // the machine renders, instead of guessing how long it takes.
     <div ref={root} data-state={screen}>
-      <ThreeCanvas shadows camera={{ position: [0, 12, 7], fov: 45 }} className="h-[440px] sm:h-[540px]" label={`Marble Maze, level ${level + 1}: ${current.name}. A wooden maze seen from above, with a steel marble`} overlay={overlay}>
+      <ThreeCanvas fullscreen shadows camera={{ position: [0, 12, 7], fov: 45 }} className="h-[440px] sm:h-[540px]" label={`Marble Maze, level ${level + 1}: ${current.name}. A wooden maze seen from above, with a steel marble`} overlay={overlay}>
         {(animate) => (
           <>
             <color attach="background" args={["#14121c"]} />
