@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useMotion } from "@/components/motion/MotionProvider";
 import { ThreeCanvas } from "@/components/three/ThreeCanvas";
+import { TiltControls } from "@/components/three/TiltControls";
 import { Leaderboard } from "@/components/Leaderboard";
 import { Button } from "@/components/ui";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
@@ -194,14 +195,12 @@ export function Runner() {
 
   return (
     <div ref={root}>
-      <ThreeCanvas fullscreen camera={{ position: [0, 1.5, 6.5], fov: 68, near: 0.1, far: FAR * 1.5 }} className="h-[480px] sm:h-[560px]" label="Starfield Runner: a small ship flying through an asteroid field" overlay={overlay}>
+      <ThreeCanvas fullscreen camera={{ position: [0, 1.5, 6.5], fov: 68, near: 0.1, far: FAR * 1.5 }} className="h-[480px] sm:h-[560px]" label="Starfield Runner: a small ship flying through an asteroid field"
+        overlay={<>{overlay}<TiltControls available={canTilt} on={tilt.deviceOn} enableLabel="Tilt to steer" onEnable={useDeviceTilt} onRecalibrate={tilt.recalibrate} onDisable={tilt.disableDevice} /></>}>
         {() => <RunnerScene live={live} step={step} />}
       </ThreeCanvas>
       <div className="mb-2 flex flex-wrap items-center gap-2">
-        {canTilt && (tilt.deviceOn
-          ? <><Button variant="ghost" onClick={tilt.recalibrate}>Recalibrate</Button><Button variant="ghost" onClick={tilt.disableDevice}>Stop using tilt</Button></>
-          : <Button onClick={useDeviceTilt}>Steer by tilting your phone</Button>)}
-        <span className="text-sm text-muted">Keyboard: arrow keys or WASD to steer, hold Space or Shift to boost. Touch: drag to steer, hold Boost.</span>
+        <span className="text-sm text-muted">Keyboard: arrow keys or WASD to steer, hold Space or Shift to boost. Touch: drag to steer, hold Boost, or tap &quot;Tilt to steer&quot; in the game.</span>
       </div>
       {reduced && <p className="text-sm text-muted">Reduced motion: no screen shake and plain score pops; the flight itself still moves, since that&apos;s the game.</p>}
     </div>

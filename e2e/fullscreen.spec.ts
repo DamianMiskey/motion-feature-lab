@@ -40,3 +40,30 @@ test("takeover mode (as on iPhone): fills the screen, page can't scroll, Escape 
   await expect(stage).toHaveAttribute("data-fullscreen", "off");
   expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("");
 });
+
+test.describe("on a phone", () => {
+  // A touch screen with motion sensors: the games offer tilt steering.
+  test.use({ viewport: { width: 412, height: 839 }, hasTouch: true, isMobile: true });
+
+  for (const [path, label] of [["/runner", "Tilt to steer"], ["/marble", "Tilt to play"]] as const) {
+    test(`${path}: tilt steering is inside the game, also in full screen`, async ({ page }) => {
+      await page.goto(path);
+      await page.locator("article section").nth(2).scrollIntoViewIfNeeded();
+      const stage = page.locator("[data-fullscreen]");
+      const tilt = page.getByRole("button", { name: label });
+      await expect(tilt).toBeVisible({ timeout: 30_000 });
+      const inside = async () => {
+        const s = (await stage.boundingBox())!, t = (await tilt.boundingBox())!;
+        return t.x >= s.x && t.y >= s.y && t.x + t.width <= s.x + s.width && t.y + t.height <= s.y + s.height;
+      };
+      expect(await inside()).toBe(true);
+      // Reachable above the start panel: a real tap lands on it, nothing covers it.
+      const box = (await tilt.boundingBox())!;
+      expect(await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.textContent, [box.x + box.width / 2, box.y + box.height / 2])).toBe(label);
+      await page.getByRole("button", { name: "Full screen", exact: true }).tap();
+      await expect(stage).not.toHaveAttribute("data-fullscreen", "off");
+      await expect(tilt).toBeVisible();
+      expect(await inside()).toBe(true);
+    });
+  }
+});
