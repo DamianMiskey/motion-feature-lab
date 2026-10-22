@@ -9,7 +9,7 @@ export default function GamePage() {
       tagline="The capstone: a small game that uses all three tools together."
       docs="https://pmndrs.github.io/react-three-rapier/"
       whatItIs={<p>
-        Three levels of towers on a floating platform, and a few balls to knock every block off. <strong>Three.js</strong> and{" "}
+        Six levels of towers on a floating platform (from a simple pyramid to a castle and a small city), and a few balls to knock every block off. <strong>Three.js</strong> and{" "}
         <strong>Rapier</strong> run the world: the blocks, the throws, the falls (a throw is a ray from the camera through the
         crosshair, the same raycasting that picks objects under the mouse). <strong>GSAP</strong> runs everything around it:
         the camera swooping in, menus with split-text titles, the score counting up, &quot;+100&quot; pops where blocks fall,

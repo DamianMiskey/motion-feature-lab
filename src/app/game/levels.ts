@@ -48,10 +48,63 @@ function wall(width: number, rows: number): Block[] {
   return blocks;
 }
 
+// A 3D stepped pyramid: square layers, each centred on the one below, so every
+// block rests on the four beneath it.
+function stepPyramid(base: number): Block[] {
+  const blocks: Block[] = [];
+  for (let row = 0; row < base; row++) {
+    const n = base - row;
+    for (let i = 0; i < n; i++) {
+      for (let k = 0; k < n; k++) {
+        blocks.push({ id: `s${row}-${i}-${k}`, position: [(i - (n - 1) / 2) * BLOCK, rowY(row), (k - (n - 1) / 2) * BLOCK], color: COLOURS[row % COLOURS.length] });
+      }
+    }
+  }
+  return blocks;
+}
+
+// A small city: single-block towers of different heights on a grid, with a
+// block-wide street between them both ways. Each tower needs its own throw,
+// and the front row partly hides the back one.
+function skyline(rows: number[][]): Block[] {
+  const blocks: Block[] = [];
+  rows.forEach((heights, r) => {
+    const z = (r - (rows.length - 1) / 2) * 2 * BLOCK;
+    heights.forEach((h, c) => {
+      const x = (c - (heights.length - 1) / 2) * 2 * BLOCK;
+      for (let row = 0; row < h; row++) {
+        blocks.push({ id: `k${r}-${c}-${row}`, position: [x, rowY(row), z], color: COLOURS[(r * 2 + c + row) % COLOURS.length] });
+      }
+    });
+  });
+  return blocks;
+}
+
+// A hollow courtyard: a ring of walls `wallRows` high, `width` by `depth`
+// blocks, with the four corners rising `turretRows` higher.
+function castle(width: number, depth: number, wallRows: number, turretRows: number): Block[] {
+  const blocks: Block[] = [];
+  const corner = (i: number, k: number) => (i === 0 || i === width - 1) && (k === 0 || k === depth - 1);
+  for (let row = 0; row < wallRows + turretRows; row++) {
+    for (let i = 0; i < width; i++) {
+      for (let k = 0; k < depth; k++) {
+        const edge = i === 0 || i === width - 1 || k === 0 || k === depth - 1;
+        if (!edge || (row >= wallRows && !corner(i, k))) continue;
+        blocks.push({ id: `c${row}-${i}-${k}`, position: [(i - (width - 1) / 2) * BLOCK, rowY(row), (k - (depth - 1) / 2) * BLOCK], color: corner(i, k) ? COLOURS[1] : COLOURS[(row + i + k) % 2 === 0 ? 0 : 4] });
+      }
+    }
+  }
+  return blocks;
+}
+
 export const LEVELS: Level[] = [
   { name: "Pyramid", balls: 6, blocks: pyramid(5) },
   { name: "Twin towers", balls: 6, blocks: [...tower(1, 6, -1.2), ...tower(1, 6, 1.2)] },
   { name: "The wall", balls: 5, blocks: wall(7, 5) },
+  { name: "Step pyramid", balls: 6, blocks: stepPyramid(4) },
+  // Back row first (further from the camera), then the front row.
+  { name: "Skyline", balls: 7, blocks: skyline([[4, 6, 3, 5], [3, 5, 4, 2]]) },
+  { name: "Castle", balls: 7, blocks: castle(7, 5, 2, 2) },
 ];
 
 export const POINTS_PER_BLOCK = 100;
