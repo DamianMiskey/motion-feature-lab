@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { FARO } from "./src/lib/faro";
 import { WASM_PAGES } from "./src/lib/wasm-pages";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -16,8 +17,9 @@ const policy = (extraScript = "") => [
   "font-src 'self'",
   // blob: is for 3D models: the glTF loader unpacks embedded textures into
   // blob: URLs created by the page itself, then fetches them.
-  // The games' leaderboards (the API lab), over fetch and EventSource.
-  `connect-src 'self' blob: ${scoresOrigin}`,
+  // The games' leaderboards (the API lab), over fetch and EventSource, and
+  // real user monitoring (Grafana Faro's collector, src/lib/faro.ts).
+  `connect-src 'self' blob: ${scoresOrigin} ${new URL(FARO.url).origin}`,
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

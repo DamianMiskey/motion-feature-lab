@@ -23,6 +23,12 @@ export default function Home() {
           <li><strong>Three.js</strong> renders real-time 3D with WebGL. Here it&apos;s used through <strong>react-three-fiber</strong>, which lets a scene be written as React components.</li>
         </ol>
         <p className="mb-0 text-sm text-muted">Every demo respects the motion setting in the sidebar, which follows your system&apos;s &quot;reduce motion&quot; preference by default.</p>
+        <p className="mb-0 text-sm text-muted">
+          This site measures how it performs for visitors: page load and responsiveness times, JavaScript errors and request
+          timings go to Grafana Cloud, tagged with a random id for the browser tab (no cookies, names or accounts), and are shown
+          on the <a href="https://obs.djmiskey.com/real-users">Observability lab</a>. Grafana&apos;s servers see your IP address
+          when your browser sends them, as any server does.
+        </p>
       </section>
       {categories.map((cat) => (
         <section key={cat} className="mt-7">
