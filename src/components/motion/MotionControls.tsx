@@ -6,7 +6,7 @@ import { type MotionPreference, useMotion } from "./MotionProvider";
 export function MotionControls() {
   const { preference, setPreference, systemReduced, reduced, showFps, setShowFps } = useMotion();
   return (
-    <div className="mt-4 grid w-full gap-1.5 border-t border-line p-2">
+    <div className="mt-2 grid w-full gap-1.5 p-2">
       <div className="text-xs tracking-wider text-muted uppercase">Motion</div>
       <label className="grid gap-1 text-sm text-muted">
         Animation

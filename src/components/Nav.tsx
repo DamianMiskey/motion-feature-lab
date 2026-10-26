@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeSwitch } from "@djmiskey/lab-tokens/ThemeSwitch";
 import { categories, features } from "@/lib/features";
 import { FeatureLink } from "./FeatureLink";
 import { cx } from "./ui";
@@ -38,6 +39,7 @@ export function Nav() {
           })}
         </div>
       ))}
+      <div className="mt-4 w-full border-t border-line px-2 pt-3"><ThemeSwitch /></div>
       <MotionControls />
     </nav>
   );
