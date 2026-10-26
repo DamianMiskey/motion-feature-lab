@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { THEME_SCRIPT } from "@djmiskey/lab-tokens/theme";
 import { Nav } from "@/components/Nav";
 import { FpsMeter } from "@/components/motion/FpsMeter";
 import { MotionProvider } from "@/components/motion/MotionProvider";
@@ -11,7 +12,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the theme script sets data-theme before React loads.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Applies the visitor's theme before the first paint, so there's no flash. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         <MotionProvider>
           {/* minmax(0, 1fr), not auto/1fr: a column sized to its content would let
